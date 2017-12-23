@@ -1,0 +1,89 @@
+
+html  {background-color: #003366;}
+#doc3 {background-color: #ffffff;}
+
+/* WAS FFF8DC */
+
+/* previously the #bd had a margin of 2em. Took out because Erich asked that the timeline go out to the edges of the display. */
+
+#wrap1 {display: block;}
+#hd, #ft {margin: 2em; padding-top: 2em;}
+#ft {padding-bottom: 1em;}
+#bd div.yui-g {margin: none;}
+h1 {color: #834c24;}
+p {margin-top: .5em;}
+
+p#mytitle
+{
+	text-align: center;
+	font-size: 2em;
+
+}
+
+.timeline-copyright
+{
+	bottom:10px !important;
+}
+
+#exclusiondiv
+{
+	margin-top:20px;
+	font-size:0.8em;
+}
+
+div#controls table td
+{
+	border:none;
+}
+
+.btn {
+  background: #3498db;
+  background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
+  background-image: -moz-linear-gradient(top, #3498db, #2980b9);
+  background-image: -ms-linear-gradient(top, #3498db, #2980b9);
+  background-image: -o-linear-gradient(top, #3498db, #2980b9);
+  background-image: linear-gradient(to bottom, #3498db, #2980b9);
+  -webkit-border-radius: 17;
+  -moz-border-radius: 17;
+  border-radius: 17px;
+  font-family: Arial;
+  color: #ffffff;
+  font-size: 10px;
+  padding: 5px 10px 5px 10px;
+  text-decoration: none;
+}
+
+.btn:hover {
+  background: #3cb0fd;
+  background-image: -webkit-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -moz-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -ms-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: -o-linear-gradient(top, #3cb0fd, #3498db);
+  background-image: linear-gradient(to bottom, #3cb0fd, #3498db);
+  text-decoration: none;
+}
+
+#controls > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(5) > input:nth-child(1)
+{
+	/* pink */
+	background: #ffb3ba !important;
+}
+
+#controls > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(4) > input:nth-child(1)
+{
+	/* orange */
+	background: #ffdfba !important;
+}
+
+#controls > table:nth-child(1) > tbody:nth-child(1) > tr:nth-child(2) > td:nth-child(3) > input:nth-child(1)
+{
+	/* yellow */
+	background: #ffffba !important;
+}
+
+#warningzero
+{
+	font-size:1.5em;
+	font-style:italic;
+	font-weight: bolder;
+}
