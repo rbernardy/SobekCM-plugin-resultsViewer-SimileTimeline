@@ -165,7 +165,7 @@ namespace SimileTimeline
             foreach (iSearch_Title_Result titleResult in PagedResults)
             {
                 titleresult_itemcount = titleResult.Item_Count;
-                
+
                 bool multiple_title = titleResult.Item_Count > 1;
                 resultsBldr.AppendLine("<!-- titleResult.Item_Count=[" + titleResult.Item_Count + "].-->");
 
@@ -177,111 +177,121 @@ namespace SimileTimeline
                 {
                 */
 
-                    //ResultsStats.Metadata_Labels.Count
-                    // Always get the first item for things like the main link and thumbnail
-                    //iSearch_Item_Result firstItemResult = titleResult.Get_Item(0);
-                    //itemResult = titleResult.Get_Item(j);
-                    
-                    // Determine the internal link to the first (possibly only) item
-                    string internal_link = base_url + bibid + "/" + vid + textRedirectStem;
-                    packageid = bibid + "/" + vid;
+                //ResultsStats.Metadata_Labels.Count
+                // Always get the first item for things like the main link and thumbnail
+                //iSearch_Item_Result firstItemResult = titleResult.Get_Item(0);
+                //itemResult = titleResult.Get_Item(j);
 
-                    //resultsBldr.AppendLine("<!-- internal_link=[" + internal_link + "].-->");
+                // Determine the internal link to the first (possibly only) item
+                string internal_link = base_url + bibid + "/" + vid + textRedirectStem;
+                packageid = bibid + "/" + vid;
 
-                    // For browses, just point to the title
-                    if ((RequestSpecificValues.Current_Mode.Mode == Display_Mode_Enum.Aggregation) && (RequestSpecificValues.Current_Mode.Aggregation_Type == Aggregation_Type_Enum.Browse_Info))
-                        internal_link = base_url + titleResult.BibID + textRedirectStem;
+                //resultsBldr.AppendLine("<!-- internal_link=[" + internal_link + "].-->");
 
-                    resultsBldr.AppendLine("<!-- internal_link=[" + internal_link + "].-->");
-                    //resultsBldr.AppendLine("<!-- snippet=[" + titleResult.Snippet + "].-->");
+                // For browses, just point to the title
+                if ((RequestSpecificValues.Current_Mode.Mode == Display_Mode_Enum.Aggregation) && (RequestSpecificValues.Current_Mode.Aggregation_Type == Aggregation_Type_Enum.Browse_Info))
+                    internal_link = base_url + titleResult.BibID + textRedirectStem;
 
-                    dir_resource = SobekFileSystem.Resource_Network_Uri(bibid,vid);
-                    //resultsBldr.AppendLine("<!-- dir_resource=[" + dir_resource + "].-->");
+                resultsBldr.AppendLine("<!-- internal_link=[" + internal_link + "].-->");
+                //resultsBldr.AppendLine("<!-- snippet=[" + titleResult.Snippet + "].-->");
 
-                    source_url = UI_ApplicationCache_Gateway.Settings.Servers.Image_URL + SobekFileSystem.AssociFilePath(bibid,vid).Replace("\\", "/");
-                    //resultsBldr.AppendLine("<!-- source_url=[" + source_url + "].-->");
+                dir_resource = SobekFileSystem.Resource_Network_Uri(bibid, vid);
+                if (debug) logme("dir_resource (SobekFileSystem.Resource_Network_Uri)=[" + dir_resource + "].");
 
-                    string title;
+                source_url = UI_ApplicationCache_Gateway.Settings.Servers.Image_URL + SobekFileSystem.AssociFilePath(bibid, vid).Replace("\\", "/");
+                if (debug) logme("source_url (UI_ApplicationCache_Gateway.Settings.Server.Image_URL=[" + source_url + "].");
 
-                    /*
-                    if (multiple_title)
+                string title;
+
+                /*
+                if (multiple_title)
+                {
+                    //resultsBldr.AppendLine("<!-- is multiple_title -->");
+
+                    // Determine term to use
+                    string multi_term = "volume";
+                    if (titleResult.MaterialType.ToUpper() == "NEWSPAPER")
                     {
-                        //resultsBldr.AppendLine("<!-- is multiple_title -->");
+                        multi_term = titleResult.Item_Count > 1 ? "issues" : "issue";
+                    }
+                    else
+                    {
+                        if (titleResult.Item_Count > 1)
+                            multi_term = "volumes";
+                    }
 
-                        // Determine term to use
-                        string multi_term = "volume";
-                        if (titleResult.MaterialType.ToUpper() == "NEWSPAPER")
+                    if ((showDate))
+                    {
+                        if (firstItemResult.PubDate.Length > 0)
                         {
-                            multi_term = titleResult.Item_Count > 1 ? "issues" : "issue";
+                            title = "[" + firstItemResult.PubDate + "] " + titleResult.GroupTitle;
                         }
                         else
                         {
-                            if (titleResult.Item_Count > 1)
-                                multi_term = "volumes";
-                        }
-
-                        if ((showDate))
-                        {
-                            if (firstItemResult.PubDate.Length > 0)
-                            {
-                                title = "[" + firstItemResult.PubDate + "] " + titleResult.GroupTitle;
-                            }
-                            else
-                            {
-                                title = titleResult.GroupTitle;
-                            }
-                        }
-                        else
-                        {
-                            title = titleResult.GroupTitle + "<br />( " + titleResult.Item_Count + " " + multi_term + " )";
+                            title = titleResult.GroupTitle;
                         }
                     }
                     else
                     {
-                        //resultsBldr.AppendLine("<!-- is NOT multiple_title -->");
+                        title = titleResult.GroupTitle + "<br />( " + titleResult.Item_Count + " " + multi_term + " )";
+                    }
+                }
+                else
+                {
+                    //resultsBldr.AppendLine("<!-- is NOT multiple_title -->");
 
-                        if (showDate)
+                    if (showDate)
+                    {
+                        //resultsBldr.AppendLine("<!-- is showDate -->");
+
+                        if (firstItemResult.PubDate.Length > 0)
                         {
-                            //resultsBldr.AppendLine("<!-- is showDate -->");
-
-                            if (firstItemResult.PubDate.Length > 0)
-                            {
-                                title = "[" + firstItemResult.PubDate + "] " + firstItemResult.Title;
-                            }
-                            else
-                            {
-                                title = firstItemResult.Title;
-                            }
+                            title = "[" + firstItemResult.PubDate + "] " + firstItemResult.Title;
                         }
                         else
                         {
-                            //resultsBldr.AppendLine("<!-- is NOT showDate -->");
-
                             title = firstItemResult.Title;
                         }
                     }
+                    else
+                    {
+                        //resultsBldr.AppendLine("<!-- is NOT showDate -->");
 
-                */
+                        title = firstItemResult.Title;
+                    }
+                }
 
-                    // metadata Title
+            */
 
-                    title = titleResult.GroupTitle;
-                    title = Regex.Replace(title, @"<[^>]+>|&nbsp;", "").Trim();
+                // metadata Title
 
-                    //resultsBldr.AppendLine("<!-- metadata display values length=[" + titleResult.Metadata_Display_Values.Length + "]. -->");
-                    //resultsBldr.AppendLine("<!-- Link=[" + firstItemResult.Link + "].-->");
+                title = titleResult.GroupTitle;
+                title = Regex.Replace(title, @"<[^>]+>|&nbsp;", "").Trim();
 
-                    // Add the title
-                    // path = source_url + "/" + firstItemResult.MainThumbnail;
-                    // that doesn't work when granting access through a router / local lan
-                    if (debug) logme("source_url=[" + source_url + "].");
+                //resultsBldr.AppendLine("<!-- metadata display values length=[" + titleResult.Metadata_Display_Values.Length + "]. -->");
+                //resultsBldr.AppendLine("<!-- Link=[" + firstItemResult.Link + "].-->");
 
-                    if (debug) logme("titleResult.GroupThumbnail=[" + titleResult.GroupThumbnail + "].");
-                    if (debug) logme("thumbnail from item[" + titleResult.Get_Item(0).MainThumbnail + "].");
+                // Add the title
+                // path = source_url + "/" + firstItemResult.MainThumbnail;
+                // that doesn't work when granting access through a router / local lan
+                if (debug) logme("source_url=[" + source_url + "].");
 
+                if (debug) logme("titleResult.GroupThumbnail=[" + titleResult.GroupThumbnail + "].");
+                if (debug) logme("thumbnail from item[" + titleResult.Get_Item(0).MainThumbnail + "].");
+
+                if (!File.Exists(dir_resource + @"\" + titleResult.Get_Item(0).MainThumbnail))
+                {
+                    if (debug) logme("Thumbnail DOESN'T exist=[" + dir_resource + @"\" + titleResult.Get_Item(0).MainThumbnail + "].");
+                    path = "http://" + getMyIP() + "/default/images/misc/nothumb.jpg";
+                }
+                else
+                {
+                    if (debug) logme("Thumbnail EXISTS=[" + dir_resource + @"\" + titleResult.Get_Item(0).MainThumbnail + "].");
                     // thumbnail filename was titleResult.GroupThumbnail
                     path = "http://" + getMyIP() + "/" + source_url.Substring(source_url.IndexOf("content")) + titleResult.Get_Item(0).MainThumbnail;
-                    if (debug) logme("path to thumbnail=[" + path + "].");
+                }
+            
+                if (debug) logme("URL (path) to thumbnail=[" + path + "].");
 
                     //resultsBldr.AppendLine("<!-- path=[" + path + "]. -->");
 
