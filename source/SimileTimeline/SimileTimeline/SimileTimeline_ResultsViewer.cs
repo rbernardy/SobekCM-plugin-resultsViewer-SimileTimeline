@@ -51,7 +51,7 @@ namespace SimileTimeline
 
             File.Delete(path_log);
 
-            String path_debug = @"D:\WebRoot\plugins\SimileTimeline\debug.txt";
+            String path_debug = @"D:\WebRoot\plugins\Timeline\debug.txt";
 
             if (File.Exists(path_debug))
             {
@@ -62,50 +62,6 @@ namespace SimileTimeline
                 debug = false;
             }
         }
-        
-        /*
-        public override bool Write_Within_HTML_Head(TextWriter Output, Custom_Tracer Tracer)
-        {
-            logme("The Write_Within_HTML_Head method within SimileTimeline_ResultsViewer was called.");
-            Tracer.Add_Trace("SimileTimeline_ResultsViewer.Write_Within_HTML_Head","RRB adding to default head with this newly added function within abstract_ResultsViewer...");
-
-            // RRB
-
-            //Tracer.Add_Trace("Html_Mainwriter.Write_Within_HTML_Head","RRB - extra temporary for SOAS project.");
-
-            String base_url;
-            base_url= "test.richardbernardy.com";
-            //base_url = "localhost:52468/";
-
-            Output.WriteLine("<link rel=\"stylesheet\" href=\"http://" + base_url + "/plugins/Timeline/css/SimileTimeline.css\" type=\"text/css\">");
-
-            Output.WriteLine("<link rel=\"stylesheet\" href=\"http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css\" type = \"text/css\">");
-            Output.WriteLine("<link rel=\"stylesheet\" type=\"text/css\" href=\"http://yui.yahooapis.com/2.7.0/build/base/base-min.css\">");
-            Output.WriteLine("<link rel=\"stylesheet\" type=\"text/css\" href=\"http://" + base_url + "/plugins/Timeline/css/simile-widgets-org_timeline_examples_styles.css\">");
-
-            Output.WriteLine("<script type=\"text/javascript\">");
-            Output.WriteLine("Timeline_ajax_url='http://" + base_url + "/plugins/Timeline/js/timeline_2.3.0/timeline_ajax/simile-ajax-api.js';");
-            Output.WriteLine("Timeline_urlPrefix='http://" + base_url + "/plugins/Timeline/js/timeline_2.3.0/timeline_js/';");
-            Output.WriteLine("Timeline_parameters='bundle=true';");
-            Output.WriteLine("</script>");
-
-            Output.WriteLine("<script src=\"http://" + base_url + "/plugins/Timeline/js/timeline_2.3.0/timeline_js/timeline-api.js?bundle=true\" type=\"text/javascript\"></script>");
-
-            // additional controls
-            Output.WriteLine("<script src=\"http://" + base_url + "/plugins/Timeline/js/simile-widgets-org_timeline_examples.js\" type=\"text/javascript\"></script>");
-
-            Output.WriteLine("<script src=\"http://" + base_url + "/plugins/Timeline/js/simile-widgets-org_timeline_customization.js\" type=\"text/javascript\"></script>");
-
-            //Tracer.Add_Trace("Html_Mainwriter.Write_Within_HTML_Head","RRB - end of temporary for SOAS project.");
-            Tracer.Add_Trace("Html_Mainwriter.Write_Within_HTML_Head", "end of write_within_html_head for timeline.");
-
-            // end rrb
-            
-            Output.WriteLine("<!-- RRB writing within head -->");
-
-            return false;
-        }
-        */
 
         public static int RoundUp(int value)
         {
@@ -320,10 +276,14 @@ namespace SimileTimeline
                     // that doesn't work when granting access through a router / local lan
                     if (debug) logme("source_url=[" + source_url + "].");
 
-                    path = "http://" + getMyIP() + "/" + source_url.Substring(source_url.IndexOf("content")) + "/" + titleResult.GroupThumbnail;
+                    if (debug) logme("titleResult.GroupThumbnail=[" + titleResult.GroupThumbnail + "].");
+                    if (debug) logme("thumbnail from item[" + titleResult.Get_Item(0).MainThumbnail + "].");
+
+                    // thumbnail filename was titleResult.GroupThumbnail
+                    path = "http://" + getMyIP() + "/" + source_url.Substring(source_url.IndexOf("content")) + titleResult.Get_Item(0).MainThumbnail;
                     if (debug) logme("path to thumbnail=[" + path + "].");
 
-                    resultsBldr.AppendLine("<!-- path=[" + path + "]. -->");
+                    //resultsBldr.AppendLine("<!-- path=[" + path + "]. -->");
 
                     //resultsBldr.AppendLine("<a href=\"" + internal_link + "\">" + title + " <img src=\"" + path + "\"/></a><br />");
                     //resultsBldr.Append("<ul>");
@@ -903,7 +863,7 @@ namespace SimileTimeline
             mainLiteral = new Literal { Text = resultsBldr.ToString() };
             MainPlaceHolder.Controls.Add(mainLiteral);
 
-            if (debug) logme("Done with Add_HTML...");
+            logme("Done with Add_HTML...");
         }
 
         public static void addToDataJS(ref string datajs,int yearnum,string title,string myAbstract,string bibid,string vid,String path)
