@@ -77,24 +77,24 @@ namespace SimileTimeline
             base_url= "test.richardbernardy.com";
             //base_url = "localhost:52468/";
 
-            Output.WriteLine("<link rel=\"stylesheet\" href=\"http://" + base_url + "/plugins/SimileTimeline/css/SimileTimeline.css\" type=\"text/css\">");
+            Output.WriteLine("<link rel=\"stylesheet\" href=\"http://" + base_url + "/plugins/Timeline/css/SimileTimeline.css\" type=\"text/css\">");
 
             Output.WriteLine("<link rel=\"stylesheet\" href=\"http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css\" type = \"text/css\">");
             Output.WriteLine("<link rel=\"stylesheet\" type=\"text/css\" href=\"http://yui.yahooapis.com/2.7.0/build/base/base-min.css\">");
-            Output.WriteLine("<link rel=\"stylesheet\" type=\"text/css\" href=\"http://" + base_url + "/plugins/SimileTimeline/css/simile-widgets-org_timeline_examples_styles.css\">");
+            Output.WriteLine("<link rel=\"stylesheet\" type=\"text/css\" href=\"http://" + base_url + "/plugins/Timeline/css/simile-widgets-org_timeline_examples_styles.css\">");
 
             Output.WriteLine("<script type=\"text/javascript\">");
-            Output.WriteLine("Timeline_ajax_url='http://" + base_url + "/plugins/SimileTimeline/js/timeline_2.3.0/timeline_ajax/simile-ajax-api.js';");
-            Output.WriteLine("Timeline_urlPrefix='http://" + base_url + "/plugins/SimileTimeline/js/timeline_2.3.0/timeline_js/';");
+            Output.WriteLine("Timeline_ajax_url='http://" + base_url + "/plugins/Timeline/js/timeline_2.3.0/timeline_ajax/simile-ajax-api.js';");
+            Output.WriteLine("Timeline_urlPrefix='http://" + base_url + "/plugins/Timeline/js/timeline_2.3.0/timeline_js/';");
             Output.WriteLine("Timeline_parameters='bundle=true';");
             Output.WriteLine("</script>");
 
-            Output.WriteLine("<script src=\"http://" + base_url + "/plugins/SimileTimeline/js/timeline_2.3.0/timeline_js/timeline-api.js?bundle=true\" type=\"text/javascript\"></script>");
+            Output.WriteLine("<script src=\"http://" + base_url + "/plugins/Timeline/js/timeline_2.3.0/timeline_js/timeline-api.js?bundle=true\" type=\"text/javascript\"></script>");
 
             // additional controls
-            Output.WriteLine("<script src=\"http://" + base_url + "/plugins/SimileTimeline/js/simile-widgets-org_timeline_examples.js\" type=\"text/javascript\"></script>");
+            Output.WriteLine("<script src=\"http://" + base_url + "/plugins/Timeline/js/simile-widgets-org_timeline_examples.js\" type=\"text/javascript\"></script>");
 
-            Output.WriteLine("<script src=\"http://" + base_url + "/plugins/SimileTimeline/js/simile-widgets-org_timeline_customization.js\" type=\"text/javascript\"></script>");
+            Output.WriteLine("<script src=\"http://" + base_url + "/plugins/Timeline/js/simile-widgets-org_timeline_customization.js\" type=\"text/javascript\"></script>");
 
             //Tracer.Add_Trace("Html_Mainwriter.Write_Within_HTML_Head","RRB - end of temporary for SOAS project.");
             Tracer.Add_Trace("Html_Mainwriter.Write_Within_HTML_Head", "end of write_within_html_head for timeline.");
@@ -482,7 +482,7 @@ namespace SimileTimeline
                         datajs += "'link': '/" + titleResult.BibID + "/" + itemResult.VID + "',";
                         // earlier had isDuration
                         datajs += "'durationEvent' : false,";
-                        datajs += "'icon' : \"http://" + getMyIP() + "/plugins/SimileTimeline/images/dark-red-circle.png\",";
+                        datajs += "'icon' : \"http://" + getMyIP() + "/plugins/Timeline/images/dark-red-circle.png\",";
                         datajs += "'color' : 'red',";
                         datajs += "'textColor' : 'green'},\r\n";
                         */
@@ -922,7 +922,7 @@ namespace SimileTimeline
             datajs += "'link': '/" + bibid + "/" + vid + "',";
             // earlier had isDuration
             datajs += "'durationEvent' : false,";
-            datajs += "'icon' : \"http://" + getMyIP() + "/plugins/SimileTimeline/images/pastel-pink-circle.png\",";
+            datajs += "'icon' : \"http://" + getMyIP() + "/plugins/Timeline/images/pastel-pink-circle.png\",";
             datajs += "'color' : 'red',";
             datajs += "'textColor' : 'green'},\r\n";
 
@@ -964,18 +964,18 @@ namespace SimileTimeline
         {
             String base_url = getMyIP();
 
-            resultsBldr.AppendLine("<link rel=\"stylesheet\" href=\"" + base_url + "/plugins/SimileTimeline/css/SimileTimeline.css\" type=\"text/css\">");
+            resultsBldr.AppendLine("<link rel=\"stylesheet\" href=\"" + base_url + "/plugins/Timeline/css/SimileTimeline.css\" type=\"text/css\">");
 
             resultsBldr.AppendLine("<link rel=\"stylesheet\" href=\"http://yui.yahooapis.com/2.7.0/build/reset-fonts-grids/reset-fonts-grids.css\" type = \"text/css\">");
             resultsBldr.AppendLine("<link rel=\"stylesheet\" type=\"text/css\" href=\"http://yui.yahooapis.com/2.7.0/build/base/base-min.css\">");
             
             resultsBldr.AppendLine("<script type=\"text/javascript\">");
-            resultsBldr.AppendLine("Timeline_ajax_url='http://" + base_url + "/plugins/SimileTimeline/js/timeline_2.3.0/timeline_ajax/simile-ajax-api.js';");
-            resultsBldr.AppendLine("Timeline_urlPrefix='http://" + base_url + "/plugins/SimileTimeline/js/timeline_2.3.0/timeline_js/';");
+            resultsBldr.AppendLine("Timeline_ajax_url='http://" + base_url + "/plugins/Timeline/js/timeline_2.3.0/timeline_ajax/simile-ajax-api.js';");
+            resultsBldr.AppendLine("Timeline_urlPrefix='http://" + base_url + "/plugins/Timeline/js/timeline_2.3.0/timeline_js/';");
             resultsBldr.AppendLine("Timeline_parameters='bundle=true';");
             resultsBldr.AppendLine("</script>");
 
-            resultsBldr.AppendLine("<script src=\"http://" + base_url + "/plugins/SimileTimeline/js/timeline_2.3.0/timeline_js/timeline-api.js?bundle=true\" type=\"text/javascript\"></script>");
+            resultsBldr.AppendLine("<script src=\"http://" + base_url + "/plugins/Timeline/js/timeline_2.3.0/timeline_js/timeline-api.js?bundle=true\" type=\"text/javascript\"></script>");
         }
         
         */
