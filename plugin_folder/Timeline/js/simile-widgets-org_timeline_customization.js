@@ -11,10 +11,10 @@
 
             var eventObject = this;
 
-            console.log("this");
+            console.log("Timeline.DefaultEventSource.Event.prototype.fillInfoBubble. the this object");
             console.log(this);
 
-            console.log("elmt");
+            console.log("elmt object");
             console.log(elmt);
 
             elmt.childNodes[1].firstChild.target="_blank";
@@ -45,7 +45,15 @@
             $("<td>joe</td>").insertAfter( $("#controls > table > tbody > tr:nth-child(2) > td:nth-child(1)") );
 
             toggleControls();
+
+            
+             
         });
+
+        function noEvent()
+        {
+            console.log("There is no event...");
+        }
 
         function toggleControls()
         {

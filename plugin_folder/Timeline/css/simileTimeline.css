@@ -28,7 +28,7 @@ p#mytitle
 #exclusiondiv
 {
 	margin-top:20px;
-	font-size:0.8em;
+	font-size:1.0em;
 }
 
 div#controls table td
@@ -86,4 +86,16 @@ div#controls table td
 	font-size:1.5em;
 	font-style:italic;
 	font-weight: bolder;
+}
+
+#tl
+{
+  /*
+	height:600px !important;
+  overflow-x:hidden !important; 
+  overflow-y:scroll !important;
+
+  
+  height:2000px;
+*/
 }

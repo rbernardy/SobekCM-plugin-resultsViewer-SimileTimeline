@@ -38,3 +38,8 @@
 {
 	text-align:center;
 }
+
+#exclusiondiv > p > a
+{
+	text-decoration: underline;
+}

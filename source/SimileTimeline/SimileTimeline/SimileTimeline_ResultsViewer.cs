@@ -118,10 +118,10 @@ namespace SimileTimeline
 
             if (debug) logme("PagedResults count=[" + PagedResults.Count + "].");
 
-            datajs+="var timeline_data = {  // save as a global variable";
+            datajs+="var timeline_data = {";
             datajs+="'dateTimeFormat': 'iso8601',";
             datajs+="'wikiURL': \"http://simile.mit.edu/shelf/\",";
-            datajs+="'wikiSection': \"Simile Cubism Timeline\",";
+            datajs+="'wikiSection': \"Simile Timeline\",";
             datajs += "\r\n";
             datajs += "'events' : [";
 
@@ -167,7 +167,7 @@ namespace SimileTimeline
                 titleresult_itemcount = titleResult.Item_Count;
 
                 bool multiple_title = titleResult.Item_Count > 1;
-                resultsBldr.AppendLine("<!-- titleResult.Item_Count=[" + titleResult.Item_Count + "].-->");
+                if (debug) resultsBldr.AppendLine("<!-- titleResult.Item_Count=[" + titleResult.Item_Count + "].-->");
 
                 bibid = titleResult.BibID;
                 vid = titleResult.Get_Item(0).VID;
@@ -192,7 +192,7 @@ namespace SimileTimeline
                 if ((RequestSpecificValues.Current_Mode.Mode == Display_Mode_Enum.Aggregation) && (RequestSpecificValues.Current_Mode.Aggregation_Type == Aggregation_Type_Enum.Browse_Info))
                     internal_link = base_url + titleResult.BibID + textRedirectStem;
 
-                resultsBldr.AppendLine("<!-- internal_link=[" + internal_link + "].-->");
+                if (debug) resultsBldr.AppendLine("<!-- internal_link=[" + internal_link + "].-->");
                 //resultsBldr.AppendLine("<!-- snippet=[" + titleResult.Snippet + "].-->");
 
                 dir_resource = SobekFileSystem.Resource_Network_Uri(bibid, vid);
@@ -458,7 +458,7 @@ namespace SimileTimeline
                         */
 
                         count_total++;
-                        addToDataJS(ref datajs, yearnum, title, myAbstract, bibid, vid, path);
+                        addToDataJS(ref datajs, yearnum, monthnum,daynum, title, myAbstract, bibid, vid, path);
                         if (debug) logme("Added event, count_total=" + count_total);
                     }
 
@@ -583,7 +583,7 @@ namespace SimileTimeline
                                         path = path = "http://" + getMyIP() + "/" + source_url.Substring(source_url.IndexOf("content")) + itemResult.MainThumbnail;
 
                                         count_total++;
-                                        addToDataJS(ref datajs, sd.yearnum, title, myAbstract, bibid, vid, path);
+                                        addToDataJS(ref datajs, sd.yearnum, sd.monthnum,sd.daynum, title, myAbstract, bibid, vid, path);
                                     }
 
                                     break;
@@ -680,7 +680,10 @@ namespace SimileTimeline
             if (debug) logme("Adding controls.");
 
             resultsBldr.AppendLine("<button id=\"buttonControls\" class=\"btn\" onclick=\"javascript:toggleControls();\">Show Controls</button>");
-            resultsBldr.AppendLine("\t\t\t <div class=\"controls\" id=\"controls\"></div>");
+            resultsBldr.AppendLine("\t\t\t <div class=\"controls\" id=\"controls\">");
+
+            // jump
+            // 2018-01-12 - jump to be within controls div
 
             resultsBldr.Append("<p>Jump: ");
             
@@ -700,7 +703,11 @@ namespace SimileTimeline
                 resultsBldr.Append("<a href=\"javascript:centerSimileAjax('1 1, " + decade + "')\">" + decade + "</a> ");
             }
             
-            resultsBldr.Append("</p>");
+            resultsBldr.AppendLine("</p>\r\n\r\n");
+
+            // end jump
+
+            resultsBldr.AppendLine("</div> <!-- end controls div -->\r\n");
 
             resultsBldr.AppendLine("<div id = \"doc3\" class=\"yui-t7\">");
 
@@ -712,16 +719,17 @@ namespace SimileTimeline
 
             resultsBldr.AppendLine("\t<div id = \"bd\" role= \"main\">");
             resultsBldr.AppendLine("\t\t<div class=\"yui-g\">");
-            resultsBldr.AppendLine("\t\t\t<div id = 'tl'></div>");
-            resultsBldr.AppendLine("\t\t\t</div>");
-            
-            resultsBldr.AppendLine("\t\t</div>");
+            resultsBldr.AppendLine("\t\t\t<div id = 'tl'>");
+            resultsBldr.AppendLine("\t\t\t</div> <!-- end of tl -->");
+            resultsBldr.AppendLine("\t\t</div> <!-- end of yui-g -->");
+   
             //resultsBldr.AppendLine("\t\t<div id = \"ft\" role=\"contentinfo\">");
             resultsBldr.AppendLine("\t\t\t<p style=\"display:none;\">Thanks to the <a href=''>Simile Timeline project</a>. Timeline version <span id='tl_ver'>");
             resultsBldr.AppendLine("\t\t\t<script>Timeline.writeVersion('tl_ver');</script></span></p>");
             //resultsBldr.AppendLine("\t\t</span></p>");
             //resultsBldr.AppendLine("\t\t</div>");
-            resultsBldr.AppendLine("</div>");
+
+            resultsBldr.AppendLine("\t</div> <!-- end of bd -->");
 
             if (debug) logme("Adding onLoad function...");
 
@@ -731,6 +739,11 @@ namespace SimileTimeline
             resultsBldr.AppendLine("console.log(\"onload function...\");");
             resultsBldr.AppendLine("var tl_el = document.getElementById(\"tl\");");
             resultsBldr.AppendLine("var eventSource1 = new Timeline.DefaultEventSource();");
+
+            // theme
+
+            resultsBldr.AppendLine("console.log(\"create theme...\");");
+             
             resultsBldr.AppendLine("var theme1 = Timeline.ClassicTheme.create();");
             resultsBldr.AppendLine("theme1.autoWidth = true; // Set the Timeline's \"width\" automatically.");
             resultsBldr.AppendLine("// Set autoWidth on the Timeline's first band's theme,");
@@ -748,62 +761,135 @@ namespace SimileTimeline
             //}
 
             resultsBldr.AppendLine("theme1.timeline_stop = new Date(Date.UTC(" + (Math.Abs(mymax) + 10) + ", 0, 1));");
+            resultsBldr.AppendLine("theme1.mouseWheel='scroll';");
+            resultsBldr.AppendLine("console.log(\"theme1 object\");");
+            resultsBldr.AppendLine("console.log(theme1);");
 
             resultsBldr.AppendLine("var d = Timeline.DateTime.parseGregorianDateTime(\"" + myavg + "\")");
+
+            // bands
+
             resultsBldr.AppendLine("console.log(\"createBandInfo...\");");
+
             resultsBldr.AppendLine("var bandInfos = [");
+
+            // Decade 
+
+            resultsBldr.AppendLine("Timeline.createBandInfo({");
+            resultsBldr.AppendLine("width:\"10%\",");
+            resultsBldr.AppendLine("intervalUnit: Timeline.DateTime.DECADE,");
+            resultsBldr.AppendLine("intervalPixels: 50,");
+            resultsBldr.AppendLine("eventSource: eventSource1,");
+            resultsBldr.AppendLine("date: d,");
+            resultsBldr.AppendLine("theme: theme1,");
+            resultsBldr.AppendLine("layout: 'overview'  // original, overview, detailed");
+            resultsBldr.AppendLine("}),");
+
+            // Year
+
+            resultsBldr.AppendLine("Timeline.createBandInfo({");
+            resultsBldr.AppendLine("width: \"10%\",");
+            resultsBldr.AppendLine("intervalUnit: Timeline.DateTime.YEAR,");
+            resultsBldr.AppendLine("intervalPixels: 50,");
+            resultsBldr.AppendLine("eventSource: eventSource1,");
+            resultsBldr.AppendLine("date: d,");
+            resultsBldr.AppendLine("theme: theme1,");
+            resultsBldr.AppendLine("layout: 'overview'  // original, overview, detailed");
+            resultsBldr.AppendLine("}),");
+
+            // Day
+
+            resultsBldr.AppendLine("Timeline.createBandInfo({");
+            resultsBldr.AppendLine("width: \"80% \", ");
+            resultsBldr.AppendLine("intervalUnit: Timeline.DateTime.DAY, ");
+            resultsBldr.AppendLine("intervalPixels: 300,");
+            resultsBldr.AppendLine("eventSource: eventSource1,");
+            resultsBldr.AppendLine("date: d,");
+            resultsBldr.AppendLine("theme: theme1,");
+            resultsBldr.AppendLine("layout: 'original'  // original, overview, detailed");
+            resultsBldr.AppendLine("}),");
+            
+            /*
+            resultsBldr.AppendLine("Timeline.createBandInfo({");
+            resultsBldr.AppendLine("width: \"20% \", ");
+            resultsBldr.AppendLine("intervalUnit: Timeline.DateTime.MONTH, ");
+            resultsBldr.AppendLine("intervalPixels: 100,");
+            resultsBldr.AppendLine("eventSource: eventSource1,");
+            resultsBldr.AppendLine("date: d,");
+            resultsBldr.AppendLine("theme: theme1,");
+            resultsBldr.AppendLine("layout: 'original'  // original, overview, detailed");
+            resultsBldr.AppendLine("}),");
+            */
+                      
+
+            /*
+            // original
             resultsBldr.AppendLine("Timeline.createBandInfo({");
             resultsBldr.AppendLine("width: 45, // set to a minimum, autoWidth will then adjust");
             resultsBldr.AppendLine("intervalUnit: Timeline.DateTime.DECADE,");
             resultsBldr.AppendLine("intervalPixels: 200,");
             resultsBldr.AppendLine("eventSource: eventSource1,");
+            */
 
-            // zoom
+            /*
             resultsBldr.AppendLine("zoomIndex: 8,");
             resultsBldr.AppendLine("zoomSteps: new Array(");
-            //resultsBldr.AppendLine("{pixelsPerInterval: 280,  unit: Timeline.DateTime.HOUR},");
-            //resultsBldr.AppendLine("{ pixelsPerInterval: 140,  unit: Timeline.DateTime.HOUR},");
-            //resultsBldr.AppendLine("{ pixelsPerInterval: 70,  unit: Timeline.DateTime.HOUR},");
-            //resultsBldr.AppendLine("{ pixelsPerInterval: 35,  unit: Timeline.DateTime.HOUR},");
+            //resultsBldr.AppendLine("{pixelsPerInterval: 280, unit: Timeline.DateTime.HOUR},");
+            //resultsBldr.AppendLine("{ pixelsPerInterval: 140,unit: Timeline.DateTime.HOUR},");
+            //resultsBldr.AppendLine("{ pixelsPerInterval: 70, unit: Timeline.DateTime.HOUR},");
+            //resultsBldr.AppendLine("{ pixelsPerInterval: 35, unit: Timeline.DateTime.HOUR},");
             resultsBldr.AppendLine("{ pixelsPerInterval: 400,  unit: Timeline.DateTime.DAY},");
             resultsBldr.AppendLine("{ pixelsPerInterval: 200,  unit: Timeline.DateTime.DAY},");
             resultsBldr.AppendLine("{ pixelsPerInterval: 100,  unit: Timeline.DateTime.DAY},");
-            resultsBldr.AppendLine("{ pixelsPerInterval: 50,  unit: Timeline.DateTime.DAY},");
+            resultsBldr.AppendLine("{ pixelsPerInterval: 50,   unit: Timeline.DateTime.DAY},");
             resultsBldr.AppendLine("{ pixelsPerInterval: 400,  unit: Timeline.DateTime.MONTH},");
             resultsBldr.AppendLine("{ pixelsPerInterval: 200,  unit: Timeline.DateTime.MONTH},");
             resultsBldr.AppendLine("{ pixelsPerInterval: 100,  unit: Timeline.DateTime.MONTH}, // DEFAULT zoomIndex");
-            resultsBldr.AppendLine("{ pixelsPerInterval: 400, unit: Timeline.DateTime.DECADE},");
-            resultsBldr.AppendLine("{ pixelsPerInterval: 200, unit: Timeline.DateTime.DECADE},");
+            resultsBldr.AppendLine("{ pixelsPerInterval: 400,  unit: Timeline.DateTime.DECADE},");
+            resultsBldr.AppendLine("{ pixelsPerInterval: 200,  unit: Timeline.DateTime.DECADE}");
             resultsBldr.AppendLine("),");
+            */
 
-            resultsBldr.AppendLine("date: d,");
-            resultsBldr.AppendLine("theme: theme1,");
-            resultsBldr.AppendLine("layout: 'original'  // original, overview, detailed");
-            resultsBldr.AppendLine("})");
+            //resultsBldr.AppendLine("date: d,");
+            //resultsBldr.AppendLine("theme: theme1,");
+            //resultsBldr.AppendLine("layout: 'original'  // original, overview, detailed");
+
+            //resultsBldr.AppendLine("})");
+
             resultsBldr.AppendLine("];");
+
+            resultsBldr.AppendLine("bandInfos[1].syncWith = 0;");
+            resultsBldr.AppendLine("bandInfos[1].highlight = true;");
+            resultsBldr.AppendLine("bandInfos[2].syncWith = 0;");
+            resultsBldr.AppendLine("bandInfos[2].highlight = true;");
+
+            //resultsBldr.AppendLine("bandInfos[3].syncWith = 0;");
+            //resultsBldr.AppendLine("bandInfos[3].highlight = true;");
+
+            // end of band
 
             resultsBldr.AppendLine("console.log(\"the bandInfos.\");");
             resultsBldr.AppendLine("console.log(bandInfos);");
 
-            // band
-            // since I only have one band maybe I don't need this.
-            //resultsBldr.AppendLine("bandInfos[0].syncWith = 0;");
-            //resultsBldr.AppendLine("bandInfos[0].highlight = true;");
-
             resultsBldr.AppendLine("console.log(\"create the timeline.\");");
             resultsBldr.AppendLine("// create the Timeline");
             resultsBldr.AppendLine("tl = Timeline.create(tl_el, bandInfos, Timeline.HORIZONTAL);");
+
             resultsBldr.AppendLine("var url = '.'; // The base url for image, icon and background image");
             resultsBldr.AppendLine("console.log(\"load the json data from [\" + url + \"].\");");
             resultsBldr.AppendLine("// references in the data");
             resultsBldr.AppendLine("eventSource1.loadJSON(timeline_data, url); // The data was stored into the");
             resultsBldr.AppendLine("// timeline_data variable.");
+
             resultsBldr.AppendLine("console.log(\"display the timeline.\");");
             resultsBldr.AppendLine("tl.layout(); // display the Timeline");
 
             // setup the controls
-            resultsBldr.AppendLine("console.log(\"setup the controls.\");");
+            resultsBldr.AppendLine("console.log(\"setup the filter/highlight controls.\");");
             //resultsBldr.AppendLine("var theme = Timeline.ClassicTheme.create();");
+
+            resultsBldr.AppendLine("theme1.mouseWheel='scroll';");
+
             resultsBldr.AppendLine("setupFilterHighlightControls(document.getElementById(\"controls\"), tl, [0,0], theme1);");
             //
             resultsBldr.AppendLine("}");
@@ -843,12 +929,31 @@ namespace SimileTimeline
             resultsBldr.AppendLine("\t$(\"span#tl_ver\").text('[' + Timeline.writeVersion('tl_ver') + ']');");
             resultsBldr.AppendLine("centerSimileAjax('1,1," + mymin + "');");
             resultsBldr.AppendLine("$(\".sbkPrsw_ResultsPanel\").css('width','95%');");
-            resultsBldr.AppendLine("});");
+            //resultsBldr.AppendLine("document.getElementById(\"timeline-band-0\").removeEventListener(\"DOMMouseScroll\",arguments.callee,false);");
+            resultsBldr.AppendLine("console.log(\"displaying timrline-band-0 object.\");");
+            resultsBldr.AppendLine("var joe=document.getElementById(\"timeline-band-0\");");
+            resultsBldr.AppendLine("console.log(joe);");
+            resultsBldr.AppendLine("console.log($._data( $('#timeline-band-0')[0], 'events' ));");
+
+            //resultsBldr.AppendLine("document.getElementById(\"timeline-band-0\").addEventListener(\"DOMMouseScroll\", noEvent);");
+            //resultsBldr.AppendLine("document.getElementById(\"timeline-band-0\").addEventListener('DOMMouseScroll',function (e) {");
+            //resultsBldr.AppendLine("e.preventDefault();");
+            //resultsBldr.AppendLine("console.log(\"adding preventdefault for timeline-band-0 dommousescroll.\");");
+            //resultsBldr.AppendLine("},false);");
+
+            resultsBldr.AppendLine("}); <!-- end of doc ready -->");
+
             resultsBldr.AppendLine("</script>");
 
             if (hasMissingDates && count_missing_date > 0)
             {
-                resultsBldr.AppendLine("<div id=\"exclusiondiv\"><p>Note: " + count_missing_date + " items were excluded from the timeilne  because they were missing dates. Click <a href=\"/all/brief?o=10\">here</a> to see them included in the brief results view. <span style=\"color:red;\">[PagedResults count=" + pagedresults_itemcount + ", item count=" + count_total + "].</span></p></div>");
+                resultsBldr.AppendLine("<div id=\"exclusiondiv\"><p>Note: " + count_missing_date + " items were excluded from the timeilne because they were missing dates. <a href=\"/all/brief?o=10\">Click here</a> to see them included in the brief results view.");
+
+                // ability to access query string from request url?
+                if (debug) resultsBldr.AppendLine("<span style=\"color:red;\">[PagedResults count=" + pagedresults_itemcount + ", item count=" + count_total + "].</span>");
+                
+                resultsBldr.AppendLine("</p>");
+                resultsBldr.AppendLine("</div> <!-- end of exclusionsdiv -->");
             }
 
             if (debug) logme("Total item count=[" + count_total + "].");
@@ -869,6 +974,8 @@ namespace SimileTimeline
             resultsBldr.AppendLine("<p>temp: total_results=[" + Total_Results + "].");
             resultsBldr.AppendLine("-->");
 
+            resultsBldr.AppendLine("</div> <!-- end of doc3 -->");
+
             // Add this to the html table
             mainLiteral = new Literal { Text = resultsBldr.ToString() };
             MainPlaceHolder.Controls.Add(mainLiteral);
@@ -876,15 +983,16 @@ namespace SimileTimeline
             logme("Done with Add_HTML...");
         }
 
-        public static void addToDataJS(ref string datajs,int yearnum,string title,string myAbstract,string bibid,string vid,String path)
+        public static void addToDataJS(ref string datajs,int yearnum,int monthnum,int daynum,string title,string myAbstract,string bibid,string vid,String path)
         {
             if (debug) logme("addToDataJS: " + bibid + "_" + vid);
 
             if (debug) logme("addToDataJS: datajs length before=" + datajs.Length);
 
             datajs += "{";
-            datajs += "'start': '" + yearnum + "',";
-            datajs += "'end': '" + yearnum + "',";
+            datajs += "'start': '" + yearnum + "-" + monthnum.ToString("D2") + "-" + daynum.ToString("D2") + "',";
+            datajs += "'durationEvent':false,";
+            //datajs += "'end': '" + yearnum + "-" + monthnum.ToString("D2") + "-" + daynum.ToString("D2") + "',";
             datajs += "'title': '" + title.Replace("'", "&apos;") + "',";
             datajs += "'description': '" + myAbstract.Replace("'", "&apos;") + "',";
             datajs += "'image': '" + path + "',";
@@ -892,7 +1000,7 @@ namespace SimileTimeline
             datajs += "'link': '/" + bibid + "/" + vid + "',";
             // earlier had isDuration
             datajs += "'durationEvent' : false,";
-            datajs += "'icon' : \"http://" + getMyIP() + "/plugins/Timeline/images/pastel-pink-circle.png\",";
+            datajs += "'icon' : \"http://" + getMyIP() + "/plugins/Timeline/images/black-circle.png\",";
             datajs += "'color' : 'red',";
             datajs += "'textColor' : 'green'},\r\n";
 
