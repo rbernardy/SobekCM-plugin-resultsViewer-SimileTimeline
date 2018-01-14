@@ -31,14 +31,13 @@ namespace SimileTimeline
     {
         public static Boolean debug=false;
         private string source_url;
-        
+        private static string path_log;
+        private static bool Verify_Thumbnail_Files = false;
+
         /// <summary> Constructor for a new instance of the SimilineTimeline_ResultsViewer class </summary>
         public SimileTimeline_ResultsViewer() : base()
         {
             // Do nothing, but the base class constructor does stuff
-
-            String path_log;
-
             if (Dns.GetHostName() == "SOB-EXHIBIT01")
             {
                 path_log = @"D:\rbernard\Dropbox\SimileTimeline-ResultsViewer.log.txt";
@@ -49,7 +48,18 @@ namespace SimileTimeline
                 path_log=Path.GetTempPath() + @"\SimileTimeline-ResultsViewer.log.txt";
             }
 
-            File.Delete(path_log);
+            // If the file exists, delete it for this next request
+            if (File.Exists(path_log))
+            {
+                try
+                {
+                    File.Delete(path_log);
+                }
+                catch ( Exception ee )
+                {
+
+                }
+            }
 
             String path_debug = @"D:\WebRoot\plugins\Timeline\debug.txt";
 
@@ -75,6 +85,9 @@ namespace SimileTimeline
         public override void Add_HTML(PlaceHolder MainPlaceHolder, Custom_Tracer Tracer)
         {
             logme("Add_HTML is called...");
+
+            debug = true;
+            Tracer.Add_Trace("SimileTimeline_ResultsViewer.Add_HTML", "TEMPORARILY SETTING DEBUG TO TRUE AT THE TOP ( MARK )");
 
             DataSet tempSet = null;
             DataTable metadataTable;
@@ -169,8 +182,11 @@ namespace SimileTimeline
                 bool multiple_title = titleResult.Item_Count > 1;
                 if (debug) resultsBldr.AppendLine("<!-- titleResult.Item_Count=[" + titleResult.Item_Count + "].-->");
 
+                // Get the first item
+                itemResult = titleResult.Get_Item(0);
+
                 bibid = titleResult.BibID;
-                vid = titleResult.Get_Item(0).VID;
+                vid = itemResult.VID;
 
                 /*
                 for (int j = 0; j < titleResult.Item_Count; j++)
@@ -265,7 +281,7 @@ namespace SimileTimeline
 
                 // metadata Title
 
-                title = titleResult.GroupTitle;
+                title = itemResult.Title; ;
                 title = Regex.Replace(title, @"<[^>]+>|&nbsp;", "").Trim();
 
                 //resultsBldr.AppendLine("<!-- metadata display values length=[" + titleResult.Metadata_Display_Values.Length + "]. -->");
@@ -276,191 +292,214 @@ namespace SimileTimeline
                 // that doesn't work when granting access through a router / local lan
                 if (debug) logme("source_url=[" + source_url + "].");
 
-                if (debug) logme("titleResult.GroupThumbnail=[" + titleResult.GroupThumbnail + "].");
-                if (debug) logme("thumbnail from item[" + titleResult.Get_Item(0).MainThumbnail + "].");
+                // if (debug) logme("titleResult.GroupThumbnail=[" + titleResult.GroupThumbnail + "].");
+                if (debug) logme("thumbnail from item[" + itemResult.MainThumbnail + "].");
 
-                if (!File.Exists(dir_resource + @"\" + titleResult.Get_Item(0).MainThumbnail))
+                // Check if the thumbnail exists, if the flag is set for that
+                if ((Verify_Thumbnail_Files) && (!File.Exists(dir_resource + @"\" + itemResult.MainThumbnail)))
                 {
-                    if (debug) logme("Thumbnail DOESN'T exist=[" + dir_resource + @"\" + titleResult.Get_Item(0).MainThumbnail + "].");
+                    if (debug) logme("Thumbnail DOESN'T exist=[" + dir_resource + @"\" + itemResult.MainThumbnail + "].");
                     path = "http://" + getMyIP() + "/default/images/misc/nothumb.jpg";
                 }
                 else
                 {
-                    if (debug) logme("Thumbnail EXISTS=[" + dir_resource + @"\" + titleResult.Get_Item(0).MainThumbnail + "].");
+                    if (debug) logme("Thumbnail EXISTS=[" + dir_resource + @"\" + itemResult.MainThumbnail + "].");
                     // thumbnail filename was titleResult.GroupThumbnail
-                    path = "http://" + getMyIP() + "/" + source_url.Substring(source_url.IndexOf("content")) + titleResult.Get_Item(0).MainThumbnail;
+                    // path = "http://" + getMyIP() + "/" + source_url.Substring(source_url.IndexOf("content")) + itemResult.MainThumbnail;
+
+                    string thumb = titleResult.BibID.Substring(0, 2) + "/" + titleResult.BibID.Substring(2, 2) + "/" + titleResult.BibID.Substring(4, 2) + "/" + titleResult.BibID.Substring(6, 2) + "/" + titleResult.BibID.Substring(8) + "/" + itemResult.VID + "/" + (itemResult.MainThumbnail).Replace("\\", "/").Replace("//", "/");
+
+                    path = UI_ApplicationCache_Gateway.Settings.Servers.Image_URL + thumb;
                 }
-            
+
                 if (debug) logme("URL (path) to thumbnail=[" + path + "].");
 
-                    //resultsBldr.AppendLine("<!-- path=[" + path + "]. -->");
+                //resultsBldr.AppendLine("<!-- path=[" + path + "]. -->");
 
-                    //resultsBldr.AppendLine("<a href=\"" + internal_link + "\">" + title + " <img src=\"" + path + "\"/></a><br />");
-                    //resultsBldr.Append("<ul>");
+                //resultsBldr.AppendLine("<a href=\"" + internal_link + "\">" + title + " <img src=\"" + path + "\"/></a><br />");
+                //resultsBldr.Append("<ul>");
 
-                    //for (i = 0; i < titleResult.Metadata_Display_Values.Length; i++)
-                    //{
-                    //    if (titleResult.Metadata_Display_Values[i].ToString().Trim().Length > 0)
-                    //    {
-                    //resultsBldr.AppendLine("<li>" + ResultsStats.Metadata_Labels[i] + ": " + titleResult.Metadata_Display_Values[i].ToString() + "</li>");
-                    //    }
-                    //}
+                //for (i = 0; i < titleResult.Metadata_Display_Values.Length; i++)
+                //{
+                //    if (titleResult.Metadata_Display_Values[i].ToString().Trim().Length > 0)
+                //    {
+                //resultsBldr.AppendLine("<li>" + ResultsStats.Metadata_Labels[i] + ": " + titleResult.Metadata_Display_Values[i].ToString() + "</li>");
+                //    }
+                //}
 
-                    //resultsBldr.Append("</ul>");
+                //resultsBldr.Append("</ul>");
 
-                    //mydate=getMetadata(titleResult,ResultsStats,"Publication_Date").Trim().Replace("|","").Trim();
-                    
-                    SortDateString = getMetadata(titleResult, ResultsStats, "SortDate").Trim();
-                    if (debug) logme(packageid + ": SortDateString=[" + SortDateString + "].");
+                //mydate=getMetadata(titleResult,ResultsStats,"Publication_Date").Trim().Replace("|","").Trim();
 
-                    if (SortDateString == "-1")
-                    {
-                        if (debug) logme(packageid + ": returned sort date string was -1.");
-                        SortDateString = "0";
-                    }
-                    else
-                    {
-                        if (debug) logme(packageid + ": returned sort date was [" + SortDateString + "].");
-                    }
+                SortDateString = getMetadata(titleResult, ResultsStats, "Timeline Date").Trim();
+                if (debug) logme(packageid + ": SortDateString=[" + SortDateString + "].");
 
-                    RequestSpecificValues.Tracer.Add_Trace("SimileTimeline_ResultsViewer", "The returned SortDateString is [" + SortDateString + "].");
+                //if (SortDateString == "-1")
+                //{
+                //    if (debug) logme(packageid + ": returned sort date string was -1.");
+                //    SortDateString = "0";
+                //}
+                //else
+                //{
+                //    if (debug) logme(packageid + ": returned sort date was [" + SortDateString + "].");
+                //}
 
-                    try
-                    {
-                        dateFromZero = getDateFromZero(Double.Parse(SortDateString));
-                        //mydate = dateFromZero.Year + "-" + dateFromZero.Month + "-" + dateFromZero.Day;
-                    }
-                    catch (Exception e)
-                    {
-                        dateFromZero = getDateFromZero(Double.Parse("0"));
-                    }
+                //RequestSpecificValues.Tracer.Add_Trace("SimileTimeline_ResultsViewer", "The returned SortDateString is [" + SortDateString + "].");
 
-                    mydate = dateFromZero.ToString("yyyy-MM-dd");
+                //try
+                //{
+                //    dateFromZero = getDateFromZero(Double.Parse(SortDateString));
+                //    //mydate = dateFromZero.Year + "-" + dateFromZero.Month + "-" + dateFromZero.Day;
+                //}
+                //catch (Exception e)
+                //{
+                //    dateFromZero = getDateFromZero(Double.Parse("0"));
+                //}
 
-                    if (debug) logme(packageid + ": mydate=[" + mydate + "], title=[" + title + "].");
+                //mydate = dateFromZero.ToString("yyyy-MM-dd");
 
-                    //resultsBldr.Append("<!-- firstItemResult.PubDate=[" + firstItemResult.PubDate + "]. -->");
-                    //resultsBldr.Append("<!-- mydate=[" + mydate + "]. -->");
+                //if (debug) logme(packageid + ": mydate=[" + mydate + "], title=[" + title + "].");
 
-                    try
-                    {
-                        convertedDate = DateTime.Parse(mydate);
-                    }
-                    catch (Exception e)
-                    {
-                        if (debug) logme(packageid + ": exception trying to parse date [" + mydate + "].");
-                        convertedDate = DateTime.Parse("0001-01-01");
-                    }
+                ////resultsBldr.Append("<!-- firstItemResult.PubDate=[" + firstItemResult.PubDate + "]. -->");
+                ////resultsBldr.Append("<!-- mydate=[" + mydate + "]. -->");
+
+                //try
+                //{
+                //    convertedDate = DateTime.Parse(mydate);
+                //}
+                //catch (Exception e)
+                //{
+                //    if (debug) logme(packageid + ": exception trying to parse date [" + mydate + "].");
+                //    convertedDate = DateTime.Parse("0001-01-01");
+                //}
+
+                if (SortDateString.Length > 0)
+                {
+                    convertedDate = DateTime.Parse(SortDateString);
 
                     if (debug) logme(packageid + ": convertedDate=[" + convertedDate.ToString("yyyy-MM-dd") + "].");
 
-                    try
+                    yearnum = convertedDate.Year;
+                    monthnum = convertedDate.Month;
+                    daynum = convertedDate.Day;
+
+                    yearsRepresented.Add(yearnum);
+                }
+                else
+                {
+                    yearnum = -1;
+                    monthnum = -1;
+                    daynum = -1;
+                    hasMissingDates = true;
+                }
+
+                //try
+                //{
+                //    myyear = mydate.Substring(0, 4);
+                //    mymonth = mydate.Substring(5, 2);
+                //    myday = mydate.Substring(8, 2);
+                //}
+                //catch (Exception e)
+                //{
+                //    if (debug) logme("Exception trying to get date elements for [" + packageid + "].\r\n");
+
+                //    myyear = "0001";
+                //    mymonth = "01";
+                //    myday = "01";
+                //}
+
+                //try
+                //{
+                //    yearnum = int.Parse(myyear);
+                //    monthnum = int.Parse(mymonth);
+                //    daynum = int.Parse(myday);
+                //}
+                //catch (Exception e)
+                //{
+                //    if (debug) logme("Exception trying to parse integers from date element strings.\r\n");
+
+                //    yearnum = 1;
+                //    monthnum = 1;
+                //    daynum = 1;
+                //}
+
+                // if (debug) logme(packageid + ": myyear=[" + myyear + "], mymonth=[" + mymonth + "], myday=[" + myday + "].");
+                if (debug) logme(packageid + ": yearnum=[" + yearnum + "], monthnum=[" + monthnum + "], daynum=[" + daynum + "].");
+
+                //if (yearnum == 1)
+                //{
+                //    hasMissingDates = true;
+                //}
+                //else
+                //{
+                //    yearsRepresented.Add(yearnum);
+                //}
+
+                // metadata **********************************************************************************************************************
+                // metadata Abstract
+
+                myAbstract = getMetadata(titleResult, ResultsStats, "Abstract").Trim().Replace("|", "").Trim();
+
+                if (myAbstract.Length == 0)
+                {
+                    myAbstract = "No abstract is available. ";
+                }
+                else
+                {
+                    myAbstract = myAbstract.Replace("  " + "\n", " ");
+
+                    if (myAbstract.Length > 100)
                     {
-                        myyear = mydate.Substring(0, 4);
-                        mymonth = mydate.Substring(5, 2);
-                        myday = mydate.Substring(8, 2);
+                        myAbstract = myAbstract.Substring(0, 100) + " ...";
                     }
-                    catch (Exception e)
-                    {
-                        if (debug) logme("Exception trying to get date elements for [" + packageid + "].\r\n");
+                }
 
-                        myyear = "0001";
-                        mymonth = "01";
-                        myday = "01";
-                    }
+                myAbstract = Regex.Replace(myAbstract, @"<[^>]+>|&nbsp;", "").Trim();
+                //myAbstract += ". temp:SortDateString=(" + SortDateString + ").";
 
-                    try
-                    {
-                        yearnum = int.Parse(myyear);
-                        monthnum = int.Parse(mymonth);
-                        daynum = int.Parse(myday);
-                    }
-                    catch (Exception e)
-                    {
-                        if (debug) logme("Exception trying to parse integers from date element strings.\r\n");
+                // *******************************************************************************************************************************
+                // metadata Subjects.Display
 
-                        yearnum = 1;
-                        monthnum = 1;
-                        daynum = 1;
-                    }
+                mySubjects = getMetadata(titleResult, ResultsStats, "Subject Keyword").Trim();
 
-                    if (debug) logme(packageid + ": myyear=[" + myyear + "], mymonth=[" + mymonth + "], myday=[" + myday + "].");
-                    if (debug) logme(packageid + ": yearnum=[" + yearnum + "], monthnum=[" + monthnum + "], daynum=[" + daynum + "].");
+                if (mySubjects.Length > 0)
+                {
+                    mySubjects = Regex.Replace(mySubjects, @"<[^>]+>|&nbsp;", "").Trim();
 
-                    if (yearnum == 1)
-                    {
-                        hasMissingDates = true;
-                    }
-                    else
-                    {
-                        yearsRepresented.Add(yearnum);
-                    }
+                    myAbstract += " Subjects: " + mySubjects + ".";
+                }
 
-                    // metadata **********************************************************************************************************************
-                    // metadata Abstract
-                    
-                    myAbstract = getMetadata(titleResult, ResultsStats, "Abstract").Trim().Replace("|", "").Trim();
+                // *******************************************************************************************************************************
 
-                    if (myAbstract.Length == 0)
-                    {
-                        myAbstract = "No abstract is available. ";
-                    }
-                    else
-                    {
-                        myAbstract = myAbstract.Replace("  " + "\n", " ");
+                if (yearnum == -1 && monthnum == -1 && daynum == -1)
+                {
+                    count_missing_date++;
+                    if (debug) logme(packageid + " was missing a date, skipping. count_missing_date=" + count_missing_date + ".");
+                }
+                else
+                {
 
-                        if (myAbstract.Length > 100)
-                        {
-                            myAbstract = myAbstract.Substring(0, 100) + " ...";
-                        }
-                    }
+                    if (debug) logme(packageid + " being added as an event.");
 
-                    myAbstract = Regex.Replace(myAbstract, @"<[^>]+>|&nbsp;", "").Trim();
-                    //myAbstract += ". temp:SortDateString=(" + SortDateString + ").";
+                    /*
+                    datajs += "{";
+                    datajs += "'start': '" + yearnum + "',";
+                    datajs += "'end': '" + yearnum + "',";
+                    datajs += "'title': '" + title.Replace("'", "&apos;") + "',";
+                    datajs += "'description': '" + myAbstract.Replace("'", "&apos;") + "',";
+                    datajs += "'image': '" + path + "',";
+                    datajs += "'link': '/" + titleResult.BibID + "/" + itemResult.VID + "',";
+                    // earlier had isDuration
+                    datajs += "'durationEvent' : false,";
+                    datajs += "'icon' : \"http://" + getMyIP() + "/plugins/Timeline/images/dark-red-circle.png\",";
+                    datajs += "'color' : 'red',";
+                    datajs += "'textColor' : 'green'},\r\n";
+                    */
 
-                    // *******************************************************************************************************************************
-                    // metadata Subjects.Display
-
-                    mySubjects = getMetadata(titleResult, ResultsStats, "Subjects.Display").Trim();
-
-                    if (mySubjects.Length > 0)
-                    {
-                        mySubjects = Regex.Replace(mySubjects, @"<[^>]+>|&nbsp;", "").Trim();
-
-                        myAbstract += " Subjects: " + mySubjects + ".";
-                    }
-
-                    // *******************************************************************************************************************************
-
-                    if (yearnum == 1 && monthnum == 1 && daynum == 1)
-                    {
-                        count_missing_date++;
-                        if (debug) logme(packageid + " was missing a date, skipping. count_missing_date=" + count_missing_date + ".");
-                    }
-                    else
-                    {
-
-                        if (debug) logme(packageid + " being added as an event.");
-
-                        /*
-                        datajs += "{";
-                        datajs += "'start': '" + yearnum + "',";
-                        datajs += "'end': '" + yearnum + "',";
-                        datajs += "'title': '" + title.Replace("'", "&apos;") + "',";
-                        datajs += "'description': '" + myAbstract.Replace("'", "&apos;") + "',";
-                        datajs += "'image': '" + path + "',";
-                        datajs += "'link': '/" + titleResult.BibID + "/" + itemResult.VID + "',";
-                        // earlier had isDuration
-                        datajs += "'durationEvent' : false,";
-                        datajs += "'icon' : \"http://" + getMyIP() + "/plugins/Timeline/images/dark-red-circle.png\",";
-                        datajs += "'color' : 'red',";
-                        datajs += "'textColor' : 'green'},\r\n";
-                        */
-
-                        count_total++;
-                        addToDataJS(ref datajs, yearnum, monthnum,daynum, title, myAbstract, bibid, vid, path);
-                        if (debug) logme("Added event, count_total=" + count_total);
-                    }
+                    count_total++;
+                    addToDataJS(ref datajs, yearnum, monthnum, daynum, title, myAbstract, bibid, vid, path);
+                    if (debug) logme("Added event, count_total=" + count_total);
+                }
 
                 /*
                 }
@@ -471,139 +510,143 @@ namespace SimileTimeline
 
                 if (debug) logme("There are [" + titleResult.Item_Count + "] items for [" + bibid + "].");
 
-                if (titleResult.Item_Count > 1)
-                {
-                    for (int j = 1; j < titleResult.Item_Count; j++)
-                    {
-                        itemResult = titleResult.Get_Item(j);
-                        vid = itemResult.VID;
-                        title = itemResult.Title;
-                        packageid = bibid + "_" + vid;
+                //    if (titleResult.Item_Count > 1)
+                //    {
+                //        for (int j = 1; j < titleResult.Item_Count; j++)
+                //        {
+                //            itemResult = titleResult.Get_Item(j);
+                //            vid = itemResult.VID;
+                //            title = itemResult.Title;
+                //            packageid = bibid + "_" + vid;
 
-                        if (debug) logme("item #" + j + ". " + packageid + "{{{" + title + "}}}.");
+                //            if (debug) logme("item #" + j + ". " + packageid + "{{{" + title + "}}}.");
 
-                        // SobekCM_Metadata_By_Bib_Vid
+                //            // SobekCM_Metadata_By_Bib_Vid
 
-                        EalDbParameter[] paramList = new EalDbParameter[25];
+                //            EalDbParameter[] paramList = new EalDbParameter[25];
 
-                        paramList[0] = new EalDbParameter("@aggregationcode", null);
-                        paramList[1] = new EalDbParameter("@bibid1", bibid);
-                        paramList[2] = new EalDbParameter("@vid1", vid);
-                        paramList[3] = new EalDbParameter("@bibid2", null);
-                        paramList[4] = new EalDbParameter("@vid2", null);
-                        paramList[5] = new EalDbParameter("@bibid3", null);
-                        paramList[6] = new EalDbParameter("@vid3", null);
-                        paramList[7] = new EalDbParameter("@bibid4", null);
-                        paramList[8] = new EalDbParameter("@vid4", null);
-                        paramList[9] = new EalDbParameter("@bibid5", null);
-                        paramList[10] = new EalDbParameter("@vid5", null);
-                        paramList[11] = new EalDbParameter("@bibid6", null);
-                        paramList[12] = new EalDbParameter("@vid6", null);
-                        paramList[13] = new EalDbParameter("@bibid7", null);
-                        paramList[14] = new EalDbParameter("@vid7", null);
-                        paramList[15] = new EalDbParameter("@bibid8", null);
-                        paramList[16] = new EalDbParameter("@vid8", null);
-                        paramList[17] = new EalDbParameter("@bibid9", null);
-                        paramList[18] = new EalDbParameter("@vid9", null);
-                        paramList[19] = new EalDbParameter("@bibid10", null);
-                        paramList[20] = new EalDbParameter("@vid10", null);
+                //            paramList[0] = new EalDbParameter("@aggregationcode", null);
+                //            paramList[1] = new EalDbParameter("@bibid1", bibid);
+                //            paramList[2] = new EalDbParameter("@vid1", vid);
+                //            paramList[3] = new EalDbParameter("@bibid2", null);
+                //            paramList[4] = new EalDbParameter("@vid2", null);
+                //            paramList[5] = new EalDbParameter("@bibid3", null);
+                //            paramList[6] = new EalDbParameter("@vid3", null);
+                //            paramList[7] = new EalDbParameter("@bibid4", null);
+                //            paramList[8] = new EalDbParameter("@vid4", null);
+                //            paramList[9] = new EalDbParameter("@bibid5", null);
+                //            paramList[10] = new EalDbParameter("@vid5", null);
+                //            paramList[11] = new EalDbParameter("@bibid6", null);
+                //            paramList[12] = new EalDbParameter("@vid6", null);
+                //            paramList[13] = new EalDbParameter("@bibid7", null);
+                //            paramList[14] = new EalDbParameter("@vid7", null);
+                //            paramList[15] = new EalDbParameter("@bibid8", null);
+                //            paramList[16] = new EalDbParameter("@vid8", null);
+                //            paramList[17] = new EalDbParameter("@bibid9", null);
+                //            paramList[18] = new EalDbParameter("@vid9", null);
+                //            paramList[19] = new EalDbParameter("@bibid10", null);
+                //            paramList[20] = new EalDbParameter("@vid10", null);
 
-                        //titleResult.Metadata_Display_Values;
-                        //itemResult;
-                        
-                        try
-                        {
-                            tempSet = EalDbAccess.ExecuteDataset(EalDbTypeEnum.MSSQL, Engine_Database.Connection_String, CommandType.StoredProcedure, "SobekCM_Metadata_By_Bib_Vid", paramList);
+                //            //titleResult.Metadata_Display_Values;
+                //            //itemResult;
 
-                            metadataTable = tempSet.Tables[1];
-                            if (debug) logme("metadatatable (1) has " + metadataTable.Rows.Count + " rows.");
+                //            try
+                //            {
+                //                tempSet = EalDbAccess.ExecuteDataset(EalDbTypeEnum.MSSQL, Engine_Database.Connection_String, CommandType.StoredProcedure, "SobekCM_Metadata_By_Bib_Vid", paramList);
 
-                            IEnumerable<DataRow> query =
-                                from metadatarow in metadataTable.AsEnumerable()
-                                select metadatarow;
+                //                metadataTable = tempSet.Tables[1];
+                //                if (debug) logme("metadatatable (1) has " + metadataTable.Rows.Count + " rows.");
 
-                            Dictionary<String,int> itemIDtoVID = new Dictionary<String,int>();
-                            
-                            foreach (DataRow p in query)
-                            {
-                                itemIDtoVID.Add(p.Field<String>("VID"),p.Field<int>("ItemID"));
-                            }
+                //                IEnumerable<DataRow> query =
+                //                    from metadatarow in metadataTable.AsEnumerable()
+                //                    select metadatarow;
 
-                            int myItemID = itemIDtoVID[vid];
+                //                Dictionary<String,int> itemIDtoVID = new Dictionary<String,int>();
 
-                            if (debug) logme("tempSet has " + tempSet.Tables.Count + " tables, tempSet table 2 has " + tempSet.Tables[2].Rows.Count + " rows -->");
+                //                foreach (DataRow p in query)
+                //                {
+                //                    itemIDtoVID.Add(p.Field<String>("VID"),p.Field<int>("ItemID"));
+                //                }
 
-                            metadataTable = tempSet.Tables[2];
+                //                int myItemID = itemIDtoVID[vid];
 
-                            query =
-                                from metadatarow in metadataTable.AsEnumerable()
-                                select metadatarow;
+                //                if (debug) logme("tempSet has " + tempSet.Tables.Count + " tables, tempSet table 2 has " + tempSet.Tables[2].Rows.Count + " rows -->");
 
-                            //IEnumerable<DataRow> thisagg =
-                            //    query.Where(p => p.Field<string>("code").Equals(code));
+                //                metadataTable = tempSet.Tables[2];
 
-                            // was in thisagg
-                            foreach (DataRow p in query)
-                            {
-                                //Response.Output.WriteLine("<counts code=\"" + p.Field<String>("code") + "\">");
-                                //mask = p.Field<short>("mask");
+                //                query =
+                //                    from metadatarow in metadataTable.AsEnumerable()
+                //                    select metadatarow;
 
-                                if (p.Field<int>("ItemID") == myItemID)
-                                {
-                                    logme("Found vid [" + vid + "] = itemid=[" + myItemID + "].");
+                //                //IEnumerable<DataRow> thisagg =
+                //                //    query.Where(p => p.Field<string>("code").Equals(code));
 
-                                    myAbstract = stripHTMLtags(p.Field<String>("Abstract"));
+                //                // was in thisagg
+                //                foreach (DataRow p in query)
+                //                {
+                //                    //Response.Output.WriteLine("<counts code=\"" + p.Field<String>("code") + "\">");
+                //                    //mask = p.Field<short>("mask");
 
-                                    if (myAbstract.Trim().Length == 0)
-                                    {
-                                        myAbstract = "Abstract is N/A";
-                                    }
+                //                    if (p.Field<int>("ItemID") == myItemID)
+                //                    {
+                //                        logme("Found vid [" + vid + "] = itemid=[" + myItemID + "].");
 
-                                    mySubjects = stripHTMLtags(p.Field<String>("Subjects.Display"));
+                //                        myAbstract = stripHTMLtags(p.Field<String>("Abstract"));
 
-                                    if (mySubjects.Trim().Length > 0)
-                                    {
-                                        myAbstract += "; Subjects: " + mySubjects;
-                                    }
+                //                        if (myAbstract.Trim().Length == 0)
+                //                        {
+                //                            myAbstract = "Abstract is N/A";
+                //                        }
 
-                                    SortDateString = stripHTMLtags(p.Field<String>("SortDate"));
-                                    sd = getSimileDateFrom(SortDateString);
+                //                        mySubjects = stripHTMLtags(p.Field<String>("Subjects.Display"));
 
-                                    if (debug) logme("Item #" + j + ". " + bibid + "_" + vid + ", myAbstract=[" + myAbstract + "], mySubjects=[" + mySubjects + "], SortDateString=[" + SortDateString + "], sd.yearnum=[" + sd.yearnum + "], sd.monthnum=[" + sd.monthnum + "], sd.daynum=[" + sd.daynum + "].");
+                //                        if (mySubjects.Trim().Length > 0)
+                //                        {
+                //                            myAbstract += "; Subjects: " + mySubjects;
+                //                        }
 
-                                    if (sd.yearnum == 1)
-                                    {
-                                        hasMissingDates = true;
-                                        count_missing_date++;
-                                    }
-                                    else
-                                    {
-                                        yearsRepresented.Add(sd.yearnum);
-                                        source_url = UI_ApplicationCache_Gateway.Settings.Servers.Image_URL + SobekFileSystem.AssociFilePath(bibid, vid).Replace("\\", "/");
-                                        path = path = "http://" + getMyIP() + "/" + source_url.Substring(source_url.IndexOf("content")) + itemResult.MainThumbnail;
+                //                        SortDateString = stripHTMLtags(p.Field<String>("SortDate"));
+                //                        sd = getSimileDateFrom(SortDateString);
 
-                                        count_total++;
-                                        addToDataJS(ref datajs, sd.yearnum, sd.monthnum,sd.daynum, title, myAbstract, bibid, vid, path);
-                                    }
+                //                        if (debug) logme("Item #" + j + ". " + bibid + "_" + vid + ", myAbstract=[" + myAbstract + "], mySubjects=[" + mySubjects + "], SortDateString=[" + SortDateString + "], sd.yearnum=[" + sd.yearnum + "], sd.monthnum=[" + sd.monthnum + "], sd.daynum=[" + sd.daynum + "].");
 
-                                    break;
-                                }
-                            }
-                        }
-                        catch (Exception e)
-                        {
-                            logme("Exception in new item processing section [" + e.Message + "].");
-                        }
+                //                        if (sd.yearnum == 1)
+                //                        {
+                //                            hasMissingDates = true;
+                //                            count_missing_date++;
+                //                        }
+                //                        else
+                //                        {
+                //                            yearsRepresented.Add(sd.yearnum);
+                //                            source_url = UI_ApplicationCache_Gateway.Settings.Servers.Image_URL + SobekFileSystem.AssociFilePath(bibid, vid).Replace("\\", "/");
+                //                            path = path = "http://" + getMyIP() + "/" + source_url.Substring(source_url.IndexOf("content")) + itemResult.MainThumbnail;
 
-                        if (debug) logme("Done processing item vid=[" + vid + "].");
-                    }
-                }
-                
+                //                            count_total++;
+                //                            addToDataJS(ref datajs, sd.yearnum, sd.monthnum,sd.daynum, title, myAbstract, bibid, vid, path);
+                //                        }
+
+                //                        break;
+                //                    }
+                //                }
+                //            }
+                //            catch (Exception e)
+                //            {
+                //                logme("Exception in new item processing section [" + e.Message + "].");
+                //            }
+
+                //            if (debug) logme("Done processing item vid=[" + vid + "].");
+                //        }
+                //    }
+
+                //    if (debug) logme("Done processing bibid=[" + bibid + "], vid=[" + vid + "].\r\n\r\n");
+                //    if (debug) logme("Total count added=" + count_total + ", missing count date=" + count_missing_date);
+                //}
+
                 if (debug) logme("Done processing bibid=[" + bibid + "], vid=[" + vid + "].\r\n\r\n");
                 if (debug) logme("Total count added=" + count_total + ", missing count date=" + count_missing_date);
             }
 
-            if (debug) logme("main processing loop completed.");
+                if (debug) logme("main processing loop completed.");
 
             if (debug) logme("datajs length = " + datajs.Length + ".");
 
@@ -1085,17 +1128,6 @@ namespace SimileTimeline
 
         public static void logme(string msg)
         {
-            string path_log;
-
-            if (Dns.GetHostName() == "SOB-EXHIBIT01")
-            {
-                path_log = @"D:\rbernard\Dropbox\SimileTimeline-ResultsViewer.log.txt";
-            }
-            else
-            {
-                path_log = @"C:\Users\rbernard\Dropbox\SimileTimeline-ResultsViewer.log.txt";
-            }
-
             File.AppendAllText(path_log, DateTime.Now.ToUniversalTime() + " (" + Dns.GetHostName() + "): " + msg + "\r\n\r\n");
         }
 
