@@ -87,8 +87,8 @@ namespace SimileTimeline
         {
             logme("Add_HTML is called...");
 
-            debug = true;
-            Tracer.Add_Trace("SimileTimeline_ResultsViewer.Add_HTML", "TEMPORARILY SETTING DEBUG TO TRUE AT THE TOP ( MARK )");
+            //debug = true;
+            //Tracer.Add_Trace("SimileTimeline_ResultsViewer.Add_HTML", "TEMPORARILY SETTING DEBUG TO TRUE AT THE TOP ( MARK )");
 
             DataSet tempSet = null;
             DataTable metadataTable;
@@ -127,17 +127,17 @@ namespace SimileTimeline
             // If results are null, or no results, return empty string
             if ((PagedResults == null) || (ResultsStats == null) || (ResultsStats.Total_Items <= 0))
                 return;
-            
-            string datajs = null;
+
+            StringBuilder datajs = new StringBuilder();
 
             if (debug) logme("PagedResults count=[" + PagedResults.Count + "].");
 
-            datajs+="var timeline_data = {";
-            datajs+="'dateTimeFormat': 'iso8601',";
-            datajs+="'wikiURL': \"http://simile.mit.edu/shelf/\",";
-            datajs+="'wikiSection': \"Simile Timeline\",";
-            datajs += "\r\n";
-            datajs += "'events' : [";
+            datajs.Append("var timeline_data = {");
+            datajs.Append("'dateTimeFormat': 'iso8601',");
+            datajs.Append("'wikiURL': \"http://simile.mit.edu/shelf/\",");
+            datajs.Append("'wikiSection': \"Simile Timeline\",");
+            datajs.Append("\r\n");
+            datajs.Append("'events' : [");
 
             // Get the text search redirect stem and (writer-adjusted) base url 
             string textRedirectStem = Text_Redirect_Stem;
@@ -568,7 +568,7 @@ namespace SimileTimeline
                     */
 
                     count_total++;
-                    addToDataJS(ref datajs, yearnum, monthnum, daynum, title, myAbstract, bibid, vid, path);
+                    addToDataJS(datajs, yearnum, monthnum, daynum, title, myAbstract, bibid, vid, path);
                     if (debug) logme("Added event, count_total=" + count_total);
                 }
 
@@ -715,6 +715,8 @@ namespace SimileTimeline
 
                 if (debug) logme("Done processing bibid=[" + bibid + "], vid=[" + vid + "].\r\n\r\n");
                 if (debug) logme("Total count added=" + count_total + ", missing count date=" + count_missing_date);
+
+               // Tracer.Add_Trace("SimileTimeline_ResultsViewer.Add_HTML", "Done processing bibid=[" + bibid + "], vid=[" + vid + "]");
             }
 
                 if (debug) logme("main processing loop completed.");
@@ -722,12 +724,12 @@ namespace SimileTimeline
             if (debug) logme("datajs length = " + datajs.Length + ".");
 
             // end of titleResults loop
-
-            datajs = datajs.Substring(0, datajs.Length - 3);
-            datajs += "]}";
+            datajs.Remove(datajs.Length - 3, 3);
+           // datajs = datajs.Substring(0, datajs.Length - 3);
+            datajs.Append("]}");
 
             if (debug) logme("webroot=[" + HttpContext.Current.Server.MapPath("~") + "].");
-            File.WriteAllText(HttpContext.Current.Server.MapPath("~") + @"\temp\" + tlsn + "-" + unixTimestamp + ".js", datajs);
+            File.WriteAllText(HttpContext.Current.Server.MapPath("~") + @"\temp\" + tlsn + "-" + unixTimestamp + ".js", datajs.ToString());
 
             resultsBldr.AppendLine("<script src=\"" + @"/temp/" + tlsn + "-" + unixTimestamp + ".js" + "\" type=\"text/javascript\"></script>");
 
@@ -973,10 +975,10 @@ namespace SimileTimeline
 
             resultsBldr.AppendLine("];");
 
-            resultsBldr.AppendLine("bandInfos[0].syncWith = 2;");
-            resultsBldr.AppendLine("bandInfos[0].highlight = true;");
-            resultsBldr.AppendLine("bandInfos[1].syncWith = 2;");
+            resultsBldr.AppendLine("bandInfos[1].syncWith = 0;");
             resultsBldr.AppendLine("bandInfos[1].highlight = true;");
+            resultsBldr.AppendLine("bandInfos[2].syncWith = 0;");
+            resultsBldr.AppendLine("bandInfos[2].highlight = true;");
 
             //resultsBldr.AppendLine("bandInfos[3].syncWith = 0;");
             //resultsBldr.AppendLine("bandInfos[3].highlight = true;");
@@ -1098,26 +1100,26 @@ namespace SimileTimeline
             logme("Done with Add_HTML...");
         }
 
-        public static void addToDataJS(ref string datajs,int yearnum,int monthnum,int daynum,string title,string myAbstract,string bibid,string vid,String path)
+        public static void addToDataJS(StringBuilder datajs,int yearnum,int monthnum,int daynum,string title,string myAbstract,string bibid,string vid,String path)
         {
             if (debug) logme("addToDataJS: " + bibid + "_" + vid);
 
             if (debug) logme("addToDataJS: datajs length before=" + datajs.Length);
 
-            datajs += "{";
-            datajs += "'start': '" + yearnum + "-" + monthnum.ToString("D2") + "-" + daynum.ToString("D2") + "',";
-            datajs += "'durationEvent':false,";
+            datajs.Append("{");
+            datajs.Append("'start': '" + yearnum + "-" + monthnum.ToString("D2") + "-" + daynum.ToString("D2") + "',");
+            datajs.Append("'durationEvent':false,");
             //datajs += "'end': '" + yearnum + "-" + monthnum.ToString("D2") + "-" + daynum.ToString("D2") + "',";
-            datajs += "'title': '" + title.Replace("'", "&apos;") + "',";
-            datajs += "'description': '" + myAbstract.Replace("'", "&apos;") + "',";
-            datajs += "'image': '" + path + "',";
+            datajs.Append("'title': '" + title.Replace("'", "&apos;") + "',");
+            datajs.Append("'description': '" + myAbstract.Replace("'", "&apos;") + "',");
+            datajs.Append("'image': '" + path + "',");
             //datajs += "'link': '/" + titleResult.BibID + "/" + itemResult.VID + "',";
-            datajs += "'link': '/" + bibid + "/" + vid + "',";
+            datajs.Append("'link': '/" + bibid + "/" + vid + "',");
             // earlier had isDuration
-            datajs += "'durationEvent' : false,";
-            datajs += "'icon' : \"http://" + getMyIP() + "/plugins/Timeline/images/black-circle.png\",";
-            datajs += "'color' : 'red',";
-            datajs += "'textColor' : 'green'},\r\n";
+            datajs.Append("'durationEvent' : false,");
+            datajs.Append("'icon' : \"http://" + getMyIP() + "/plugins/Timeline/images/black-circle.png\",");
+            datajs.Append("'color' : 'red',");
+            datajs.Append("'textColor' : 'green'},\r\n");
 
             if (debug) logme("dataToDataJS: datajs length after=" + datajs.Length);
         }
