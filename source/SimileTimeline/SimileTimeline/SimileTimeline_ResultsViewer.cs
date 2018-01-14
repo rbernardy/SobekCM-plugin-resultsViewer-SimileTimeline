@@ -18,6 +18,7 @@ using EngineAgnosticLayerDbAccess;
 using SobekCM.Engine_Library.Database;
 using System.Data;
 
+
 namespace SimileTimeline
 {
     public class simileDate
@@ -438,36 +439,106 @@ namespace SimileTimeline
                 // metadata **********************************************************************************************************************
                 // metadata Abstract
 
-                myAbstract = getMetadata(titleResult, ResultsStats, "Abstract").Trim().Replace("|", "").Trim();
-
-                if (myAbstract.Length == 0)
+                // Get the description for this item
+                const string VARIES_STRING = "<span style=\"color:Gray\">( varies )</span>";
+                StringBuilder singleResultBldr = new StringBuilder();
+                singleResultBldr.Append("<div style=\"text-align:left\"><dl class=\"sbkBrv_SingleResultDescList\">");
+                if ((RequestSpecificValues.Current_User != null) && (RequestSpecificValues.Current_User.LoggedOn) && (RequestSpecificValues.Current_User.Is_Internal_User))
                 {
-                    myAbstract = "No abstract is available. ";
-                }
-                else
-                {
-                    myAbstract = myAbstract.Replace("  " + "\n", " ");
+                    singleResultBldr.Append("<dt>BibID:</dt><dd>" + titleResult.BibID + "</dd>");
 
-                    if (myAbstract.Length > 100)
+                    if (titleResult.OPAC_Number > 1)
                     {
-                        myAbstract = myAbstract.Substring(0, 100) + " ...";
+                        singleResultBldr.Append("<dt>OPAC:</dt><dd>" + titleResult.OPAC_Number + "</dd>");
+                    }
+
+                    if (titleResult.OCLC_Number > 1)
+                    {
+                        singleResultBldr.Append("<dt>OCLC:</dt><dd>" + titleResult.OCLC_Number + "</dd>");
                     }
                 }
 
-                myAbstract = Regex.Replace(myAbstract, @"<[^>]+>|&nbsp;", "").Trim();
-                //myAbstract += ". temp:SortDateString=(" + SortDateString + ").";
-
-                // *******************************************************************************************************************************
-                // metadata Subjects.Display
-
-                mySubjects = getMetadata(titleResult, ResultsStats, "Subject Keyword").Trim();
-
-                if (mySubjects.Length > 0)
+                for (int j = 0; j < ResultsStats.Metadata_Labels.Count; j++)
                 {
-                    mySubjects = Regex.Replace(mySubjects, @"<[^>]+>|&nbsp;", "").Trim();
+                    string field = ResultsStats.Metadata_Labels[j];
 
-                    myAbstract += " Subjects: " + mySubjects + ".";
+                    // Somehow the metadata for this item did not fully save in the database.  Break out, rather than
+                    // throw the exception
+                    if ((titleResult.Metadata_Display_Values == null) || (titleResult.Metadata_Display_Values.Length <= j))
+                        break;
+
+                    string metadata_value = titleResult.Metadata_Display_Values[j];
+                    SobekCM.Core.Search.Metadata_Search_Field thisField = UI_ApplicationCache_Gateway.Settings.Metadata_Search_Field_By_Name(field);
+                    string display_field = string.Empty;
+                    if (thisField != null)
+                        display_field = thisField.Display_Term;
+                    if (display_field.Length == 0)
+                        display_field = field.Replace("_", " ");
+
+                    if (metadata_value == "*")
+                    {
+                        singleResultBldr.Append("<dt>" + UI_ApplicationCache_Gateway.Translation.Get_Translation(display_field, RequestSpecificValues.Current_Mode.Language) + ":</dt><dd>" + HttpUtility.HtmlDecode(VARIES_STRING) + "</dd>");
+                    }
+                    else if (metadata_value.Trim().Length > 0)
+                    {
+                        if (metadata_value.IndexOf("|") > 0)
+                        {
+                            bool value_found = false;
+                            string[] value_split = metadata_value.Split("|".ToCharArray());
+
+                            foreach (string thisValue in value_split)
+                            {
+                                if (thisValue.Trim().Trim().Length > 0)
+                                {
+                                    if (!value_found)
+                                    {
+                                        singleResultBldr.Append("<dt>" + UI_ApplicationCache_Gateway.Translation.Get_Translation(display_field, RequestSpecificValues.Current_Mode.Language) + ":</dt>");
+                                        value_found = true;
+                                    }
+                                    singleResultBldr.Append("<dd>" + HttpUtility.HtmlDecode(thisValue) + "</dd>");
+                                }
+                            }
+                        }
+                        else
+                        {
+                            singleResultBldr.Append("<dt>" + UI_ApplicationCache_Gateway.Translation.Get_Translation(display_field, RequestSpecificValues.Current_Mode.Language) + ":</dt><dd>" + HttpUtility.HtmlDecode(metadata_value) + "</dd>");
+                        }
+                    }
                 }
+
+                singleResultBldr.Append("</dl></div>");
+                myAbstract = singleResultBldr.ToString();
+
+                //myAbstract = getMetadata(titleResult, ResultsStats, "Abstract").Trim().Replace("|", "").Trim();
+
+                //if (myAbstract.Length == 0)
+                //{
+                //    myAbstract = "No abstract is available. ";
+                //}
+                //else
+                //{
+                //    myAbstract = myAbstract.Replace("  " + "\n", " ");
+
+                //    if (myAbstract.Length > 100)
+                //    {
+                //        myAbstract = myAbstract.Substring(0, 100) + " ...";
+                //    }
+                //}
+
+                //myAbstract = Regex.Replace(myAbstract, @"<[^>]+>|&nbsp;", "").Trim();
+                ////myAbstract += ". temp:SortDateString=(" + SortDateString + ").";
+
+                //// *******************************************************************************************************************************
+                //// metadata Subjects.Display
+
+                //mySubjects = getMetadata(titleResult, ResultsStats, "Subject Keyword").Trim();
+
+                //if (mySubjects.Length > 0)
+                //{
+                //    mySubjects = Regex.Replace(mySubjects, @"<[^>]+>|&nbsp;", "").Trim();
+
+                //    myAbstract += "<br /> <strong>Subjects</strong>: " + mySubjects + ".";
+                //}
 
                 // *******************************************************************************************************************************
 
@@ -805,7 +876,8 @@ namespace SimileTimeline
 
             resultsBldr.AppendLine("theme1.timeline_stop = new Date(Date.UTC(" + (Math.Abs(mymax) + 10) + ", 0, 1));");
             resultsBldr.AppendLine("theme1.mouseWheel='scroll';");
-            resultsBldr.AppendLine("console.log(\"theme1 object\");");
+            resultsBldr.AppendLine("theme1.event.bubble.width = 450;");
+        resultsBldr.AppendLine("console.log(\"theme1 object\");");
             resultsBldr.AppendLine("console.log(theme1);");
 
             resultsBldr.AppendLine("var d = Timeline.DateTime.parseGregorianDateTime(\"" + myavg + "\")");
