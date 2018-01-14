@@ -973,10 +973,10 @@ namespace SimileTimeline
 
             resultsBldr.AppendLine("];");
 
-            resultsBldr.AppendLine("bandInfos[1].syncWith = 0;");
+            resultsBldr.AppendLine("bandInfos[0].syncWith = 2;");
+            resultsBldr.AppendLine("bandInfos[0].highlight = true;");
+            resultsBldr.AppendLine("bandInfos[1].syncWith = 2;");
             resultsBldr.AppendLine("bandInfos[1].highlight = true;");
-            resultsBldr.AppendLine("bandInfos[2].syncWith = 0;");
-            resultsBldr.AppendLine("bandInfos[2].highlight = true;");
 
             //resultsBldr.AppendLine("bandInfos[3].syncWith = 0;");
             //resultsBldr.AppendLine("bandInfos[3].highlight = true;");
