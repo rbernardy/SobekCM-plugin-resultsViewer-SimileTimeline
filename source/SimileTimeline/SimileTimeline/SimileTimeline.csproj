@@ -36,27 +36,27 @@
     </Reference>
     <Reference Include="SobekCM_Core, Version=4.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\WebRoot\bin\SobekCM_Core.dll</HintPath>
+      <HintPath>..\..\DLLs\SobekCM_v4.11.0\SobekCM_Core.dll</HintPath>
     </Reference>
     <Reference Include="SobekCM_Engine_Library, Version=4.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\WebRoot\bin\SobekCM_Engine_Library.dll</HintPath>
+      <HintPath>..\..\DLLs\SobekCM_v4.11.0\SobekCM_Engine_Library.dll</HintPath>
     </Reference>
     <Reference Include="SobekCM_Library, Version=4.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\WebRoot\bin\SobekCM_Library.dll</HintPath>
+      <HintPath>..\..\DLLs\SobekCM_v4.11.0\SobekCM_Library.dll</HintPath>
     </Reference>
     <Reference Include="SobekCM_Resource_Database, Version=4.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\WebRoot\bin\SobekCM_Resource_Database.dll</HintPath>
+      <HintPath>..\..\DLLs\SobekCM_v4.11.0\SobekCM_Resource_Database.dll</HintPath>
     </Reference>
     <Reference Include="SobekCM_Resource_Object, Version=4.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\WebRoot\bin\SobekCM_Resource_Object.dll</HintPath>
+      <HintPath>..\..\DLLs\SobekCM_v4.11.0\SobekCM_Resource_Object.dll</HintPath>
     </Reference>
     <Reference Include="SobekCM_Tools, Version=4.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\WebRoot\bin\SobekCM_Tools.dll</HintPath>
+      <HintPath>..\..\DLLs\SobekCM_v4.11.0\SobekCM_Tools.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

@@ -2488,6 +2488,15 @@
         <member name="P:SobekCM.Resource_Object.Bib_Info.MODS_Origin_Info.Date_Copyrighted">
             <summary> Get and sets the date this item was copyrighted </summary>
         </member>
+        <member name="P:SobekCM.Resource_Object.Bib_Info.MODS_Origin_Info.Date_Captured">
+            <summary> Get and sets the date this item was captured </summary>
+        </member>
+        <member name="P:SobekCM.Resource_Object.Bib_Info.MODS_Origin_Info.Date_Valid">
+            <summary> Get and sets the date this item was determined to be valid(?) </summary>
+        </member>
+        <member name="P:SobekCM.Resource_Object.Bib_Info.MODS_Origin_Info.Date_Modified">
+            <summary> Get and sets the date this item was modified </summary>
+        </member>
         <member name="P:SobekCM.Resource_Object.Bib_Info.MODS_Origin_Info.MARC_DateIssued">
             <summary> Gets and sets the marc encoded date issued from the 260 |c </summary>
         </member>
@@ -10097,6 +10106,9 @@
             <remarks> This pulls the file list from the directory each time it is called.  In addition, it
             sorts by the filename, since this was not always happening correctly and this is primarily used
             for the online metadata update.</remarks>
+        </member>
+        <member name="P:SobekCM.Resource_Object.Web_Info.MadePublicDate">
+            <summary> Date this item was first made public and non-dark </summary>
         </member>
         <member name="P:SobekCM.Resource_Object.Web_Info.GUID">
             <summary> Gets or sets the GUID for this item </summary>

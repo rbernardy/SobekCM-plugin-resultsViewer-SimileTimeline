@@ -2737,6 +2737,41 @@
             <summary> Adds the events for this html element directly to the text writer output </summary>
             <param name="Output"> Output to write directly to </param>
         </member>
+        <member name="T:SobekCM.Library.Citation.Elements.Accession_Number_Element">
+            <summary> Element allows entry of an accession number, which is a type of identifier </summary>
+            <remarks> This class extends the <see cref="T:SobekCM.Library.Citation.Elements.SimpleTextBox_Element"/> class. </remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Accession_Number_Element.#ctor">
+            <summary> Constructor for a new instance of the Accession_Number_Element class </summary>
+        </member>
+        <member name="P:SobekCM.Library.Citation.Elements.Accession_Number_Element.Options">
+            <summary> Options dictionary allows template elements to register certain options or information
+            which may be used by other template elements </summary>
+            <remarks> This adds a special flag to indicate there is a seperate contributor element ( title_form_included = true ) </remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Accession_Number_Element.Render_Template_HTML(System.IO.TextWriter,SobekCM.Resource_Object.SobekCM_Item,System.String,System.Boolean,System.Text.StringBuilder,SobekCM.Core.Users.User_Object,SobekCM.Core.Configuration.Localization.Web_Language_Enum,SobekCM.Core.ApplicationState.Language_Support_Info,System.String)">
+            <summary> Renders the HTML for this element </summary>
+            <param name="Output"> Textwriter to write the HTML for this element </param>
+            <param name="Bib"> Object to populate this element from </param>
+            <param name="Skin_Code"> Code for the current skin </param>
+            <param name="IsMozilla"> Flag indicates if the current browse is Mozilla Firefox (different css choices for some elements)</param>
+            <param name="PopupFormBuilder"> Builder for any related popup forms for this element </param>
+            <param name="Current_User"> Current user, who's rights may impact the way an element is rendered </param>
+            <param name="CurrentLanguage"> Current user-interface language </param>
+            <param name="Translator"> Language support object which handles simple translational duties </param>
+            <param name="Base_URL"> Base URL for the current request </param>
+            <remarks> This simple element does not append any popup form to the popup_form_builder</remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Accession_Number_Element.Prepare_For_Save(SobekCM.Resource_Object.SobekCM_Item,SobekCM.Core.Users.User_Object)">
+            <summary> Prepares the bib object for the save, by clearing any existing data in this element's related field(s) </summary>
+            <param name="Bib"> Existing digital resource object which may already have values for this element's data field(s) </param>
+            <param name="Current_User"> Current user, who's rights may impact the way an element is rendered </param>
+            <remarks> This clears any preexisting identifiers </remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Accession_Number_Element.Save_To_Bib(SobekCM.Resource_Object.SobekCM_Item)">
+            <summary> Saves the data rendered by this element to the provided bibliographic object during postback </summary>
+            <param name="Bib"> Object into which to save the user's data, entered into the html rendered by this element </param>
+        </member>
         <member name="T:SobekCM.Library.Citation.Elements.Additional_Work_Needed_Element">
             <summary> Element allows entry of the flag that indicates if an item should be reprocessed by the builder </summary>
             <remarks> This class extends the <see cref="T:SobekCM.Library.Citation.Elements.CheckBox_Element"/> class. </remarks>
@@ -2950,6 +2985,126 @@
             <remarks> This sets the flag to FALSE.  It will be set to TRUE if the checkbox is present (thus TRUE) in the return form </remarks>
         </member>
         <member name="M:SobekCM.Library.Citation.Elements.Dark_Flag_Element.Save_To_Bib(SobekCM.Resource_Object.SobekCM_Item)">
+            <summary> Saves the data rendered by this element to the provided bibliographic object during postback </summary>
+            <param name="Bib"> Object into which to save the user's data, entered into the html rendered by this element </param>
+        </member>
+        <member name="T:SobekCM.Library.Citation.Elements.Date_Captured_Element">
+            <summary> Element allows entry of the creation date for an item </summary>
+            <remarks> This class extends the <see cref="T:SobekCM.Library.Citation.Elements.SimpleTextBox_Element"/> class. </remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Captured_Element.#ctor">
+            <summary> Constructor for a new instance of the Date_Captured_Element class </summary>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Captured_Element.Render_Template_HTML(System.IO.TextWriter,SobekCM.Resource_Object.SobekCM_Item,System.String,System.Boolean,System.Text.StringBuilder,SobekCM.Core.Users.User_Object,SobekCM.Core.Configuration.Localization.Web_Language_Enum,SobekCM.Core.ApplicationState.Language_Support_Info,System.String)">
+            <summary> Renders the HTML for this element </summary>
+            <param name="Output"> Textwriter to write the HTML for this element </param>
+            <param name="Bib"> Object to populate this element from </param>
+            <param name="Skin_Code"> Code for the current skin </param>
+            <param name="IsMozilla"> Flag indicates if the current browse is Mozilla Firefox (different css choices for some elements)</param>
+            <param name="PopupFormBuilder"> Builder for any related popup forms for this element </param>
+            <param name="Current_User"> Current user, who's rights may impact the way an element is rendered </param>
+            <param name="CurrentLanguage"> Current user-interface language </param>
+            <param name="Translator"> Language support object which handles simple translational duties </param>
+            <param name="Base_URL"> Base URL for the current request </param>
+            <remarks> This simple element does not append any popup form to the popup_form_builder</remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Captured_Element.Prepare_For_Save(SobekCM.Resource_Object.SobekCM_Item,SobekCM.Core.Users.User_Object)">
+            <summary> Prepares the bib object for the save, by clearing any existing data in this element's related field(s) </summary>
+            <param name="Bib"> Existing digital resource object which may already have values for this element's data field(s) </param>
+            <param name="Current_User"> Current user, who's rights may impact the way an element is rendered </param>
+            <remarks> This does nothing since there is only one date </remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Captured_Element.Save_To_Bib(SobekCM.Resource_Object.SobekCM_Item)">
+            <summary> Saves the data rendered by this element to the provided bibliographic object during postback </summary>
+            <param name="Bib"> Object into which to save the user's data, entered into the html rendered by this element </param>
+        </member>
+        <member name="T:SobekCM.Library.Citation.Elements.Date_Created_Element">
+            <summary> Element allows entry of the creation date for an item </summary>
+            <remarks> This class extends the <see cref="T:SobekCM.Library.Citation.Elements.SimpleTextBox_Element"/> class. </remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Created_Element.#ctor">
+            <summary> Constructor for a new instance of the Date_Created_Element class </summary>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Created_Element.Render_Template_HTML(System.IO.TextWriter,SobekCM.Resource_Object.SobekCM_Item,System.String,System.Boolean,System.Text.StringBuilder,SobekCM.Core.Users.User_Object,SobekCM.Core.Configuration.Localization.Web_Language_Enum,SobekCM.Core.ApplicationState.Language_Support_Info,System.String)">
+            <summary> Renders the HTML for this element </summary>
+            <param name="Output"> Textwriter to write the HTML for this element </param>
+            <param name="Bib"> Object to populate this element from </param>
+            <param name="Skin_Code"> Code for the current skin </param>
+            <param name="IsMozilla"> Flag indicates if the current browse is Mozilla Firefox (different css choices for some elements)</param>
+            <param name="PopupFormBuilder"> Builder for any related popup forms for this element </param>
+            <param name="Current_User"> Current user, who's rights may impact the way an element is rendered </param>
+            <param name="CurrentLanguage"> Current user-interface language </param>
+            <param name="Translator"> Language support object which handles simple translational duties </param>
+            <param name="Base_URL"> Base URL for the current request </param>
+            <remarks> This simple element does not append any popup form to the popup_form_builder</remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Created_Element.Prepare_For_Save(SobekCM.Resource_Object.SobekCM_Item,SobekCM.Core.Users.User_Object)">
+            <summary> Prepares the bib object for the save, by clearing any existing data in this element's related field(s) </summary>
+            <param name="Bib"> Existing digital resource object which may already have values for this element's data field(s) </param>
+            <param name="Current_User"> Current user, who's rights may impact the way an element is rendered </param>
+            <remarks> This does nothing since there is only one date </remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Created_Element.Save_To_Bib(SobekCM.Resource_Object.SobekCM_Item)">
+            <summary> Saves the data rendered by this element to the provided bibliographic object during postback </summary>
+            <param name="Bib"> Object into which to save the user's data, entered into the html rendered by this element </param>
+        </member>
+        <member name="T:SobekCM.Library.Citation.Elements.Date_Modified_Element">
+            <summary> Element allows entry of the modified date for an item </summary>
+            <remarks> This class extends the <see cref="T:SobekCM.Library.Citation.Elements.SimpleTextBox_Element"/> class. </remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Modified_Element.#ctor">
+            <summary> Constructor for a new instance of the Date_Modified_Element class </summary>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Modified_Element.Render_Template_HTML(System.IO.TextWriter,SobekCM.Resource_Object.SobekCM_Item,System.String,System.Boolean,System.Text.StringBuilder,SobekCM.Core.Users.User_Object,SobekCM.Core.Configuration.Localization.Web_Language_Enum,SobekCM.Core.ApplicationState.Language_Support_Info,System.String)">
+            <summary> Renders the HTML for this element </summary>
+            <param name="Output"> Textwriter to write the HTML for this element </param>
+            <param name="Bib"> Object to populate this element from </param>
+            <param name="Skin_Code"> Code for the current skin </param>
+            <param name="IsMozilla"> Flag indicates if the current browse is Mozilla Firefox (different css choices for some elements)</param>
+            <param name="PopupFormBuilder"> Builder for any related popup forms for this element </param>
+            <param name="Current_User"> Current user, who's rights may impact the way an element is rendered </param>
+            <param name="CurrentLanguage"> Current user-interface language </param>
+            <param name="Translator"> Language support object which handles simple translational duties </param>
+            <param name="Base_URL"> Base URL for the current request </param>
+            <remarks> This simple element does not append any popup form to the popup_form_builder</remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Modified_Element.Prepare_For_Save(SobekCM.Resource_Object.SobekCM_Item,SobekCM.Core.Users.User_Object)">
+            <summary> Prepares the bib object for the save, by clearing any existing data in this element's related field(s) </summary>
+            <param name="Bib"> Existing digital resource object which may already have values for this element's data field(s) </param>
+            <param name="Current_User"> Current user, who's rights may impact the way an element is rendered </param>
+            <remarks> This does nothing since there is only one date </remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Modified_Element.Save_To_Bib(SobekCM.Resource_Object.SobekCM_Item)">
+            <summary> Saves the data rendered by this element to the provided bibliographic object during postback </summary>
+            <param name="Bib"> Object into which to save the user's data, entered into the html rendered by this element </param>
+        </member>
+        <member name="T:SobekCM.Library.Citation.Elements.Date_Valid_Element">
+            <summary> Element allows entry of the valid date for an item </summary>
+            <remarks> This class extends the <see cref="T:SobekCM.Library.Citation.Elements.SimpleTextBox_Element"/> class. </remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Valid_Element.#ctor">
+            <summary> Constructor for a new instance of the Date_Valid_Element class </summary>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Valid_Element.Render_Template_HTML(System.IO.TextWriter,SobekCM.Resource_Object.SobekCM_Item,System.String,System.Boolean,System.Text.StringBuilder,SobekCM.Core.Users.User_Object,SobekCM.Core.Configuration.Localization.Web_Language_Enum,SobekCM.Core.ApplicationState.Language_Support_Info,System.String)">
+            <summary> Renders the HTML for this element </summary>
+            <param name="Output"> Textwriter to write the HTML for this element </param>
+            <param name="Bib"> Object to populate this element from </param>
+            <param name="Skin_Code"> Code for the current skin </param>
+            <param name="IsMozilla"> Flag indicates if the current browse is Mozilla Firefox (different css choices for some elements)</param>
+            <param name="PopupFormBuilder"> Builder for any related popup forms for this element </param>
+            <param name="Current_User"> Current user, who's rights may impact the way an element is rendered </param>
+            <param name="CurrentLanguage"> Current user-interface language </param>
+            <param name="Translator"> Language support object which handles simple translational duties </param>
+            <param name="Base_URL"> Base URL for the current request </param>
+            <remarks> This simple element does not append any popup form to the popup_form_builder</remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Valid_Element.Prepare_For_Save(SobekCM.Resource_Object.SobekCM_Item,SobekCM.Core.Users.User_Object)">
+            <summary> Prepares the bib object for the save, by clearing any existing data in this element's related field(s) </summary>
+            <param name="Bib"> Existing digital resource object which may already have values for this element's data field(s) </param>
+            <param name="Current_User"> Current user, who's rights may impact the way an element is rendered </param>
+            <remarks> This does nothing since there is only one date </remarks>
+        </member>
+        <member name="M:SobekCM.Library.Citation.Elements.Date_Valid_Element.Save_To_Bib(SobekCM.Resource_Object.SobekCM_Item)">
             <summary> Saves the data rendered by this element to the provided bibliographic object during postback </summary>
             <param name="Bib"> Object into which to save the user's data, entered into the html rendered by this element </param>
         </member>
@@ -5225,7 +5380,7 @@
             <summary> Adds a new default value for this multiple text box type element </summary>
             <param name="DefaultValue"> New default value</param>
         </member>
-        <member name="M:SobekCM.Library.Citation.Elements.MultipleTextBox_Element.render_helper(System.IO.TextWriter,System.Collections.ObjectModel.ReadOnlyCollection{System.String},System.String,SobekCM.Core.Users.User_Object,SobekCM.Core.Configuration.Localization.Web_Language_Enum,SobekCM.Core.ApplicationState.Language_Support_Info,System.String)">
+        <member name="M:SobekCM.Library.Citation.Elements.MultipleTextBox_Element.render_helper(System.IO.TextWriter,System.Collections.Generic.IList{System.String},System.String,SobekCM.Core.Users.User_Object,SobekCM.Core.Configuration.Localization.Web_Language_Enum,SobekCM.Core.ApplicationState.Language_Support_Info,System.String)">
             <summary> Method helps to render all multiple text box based elements </summary>
             <param name="Output"> Output for the generated html for this element </param>
             <param name="InstanceValues"> Value(s) for the current digital resource to display</param>
@@ -5950,7 +6105,7 @@
             <param name="Bib"> Object into which to save the user's data, entered into the html rendered by this element </param>
         </member>
         <member name="T:SobekCM.Library.Citation.Elements.Date_Element">
-            <summary> Element allows entry of the date for an item </summary>
+            <summary> Element allows entry of the date issued or publication date for an item </summary>
             <remarks> This class extends the <see cref="T:SobekCM.Library.Citation.Elements.SimpleTextBox_Element"/> class. </remarks>
         </member>
         <member name="M:SobekCM.Library.Citation.Elements.Date_Element.#ctor">
@@ -7212,6 +7367,24 @@
             <param name="XMLReader"> Current template xml configuration reader </param>
             <remarks> This procedure does not currently read any inner xml (not yet necessary) </remarks>
         </member>
+        <!-- Badly formed XML comment ignored for member "T:SobekCM.Library.Citation.SectionWriter.Aggregation_SectionWriter" -->
+        <member name="M:SobekCM.Library.Citation.SectionWriter.Aggregation_SectionWriter.Has_Data_To_Write(SobekCM.Core.UI_Configuration.Citation.CitationElement,SobekCM.Core.BriefItem.BriefItemInfo)">
+            <summary> Returns flag that indicates this citation section writer 
+            will be writing values to the output stream </summary>
+            <param name="ElementInfo"> Additional possible data about this citation element </param>
+            <param name="Item"> Digital resource to analyze for data to write </param>
+            <returns>TRUE if there is a value to write</returns>
+        </member>
+        <member name="M:SobekCM.Library.Citation.SectionWriter.Aggregation_SectionWriter.Write_Citation_Section(SobekCM.Core.UI_Configuration.Citation.CitationElement,System.Text.StringBuilder,SobekCM.Core.BriefItem.BriefItemInfo,System.Int32,System.String,System.String,SobekCM.Tools.Custom_Tracer,SobekCM.Core.Navigation.Navigation_Object)">
+            <summary> Wites a section of citation from a provided digital resource </summary>
+            <param name="ElementInfo"> Additional possible data about this citation element </param>
+            <param name="Output"> Response stream for the item viewer to write directly to </param>
+            <param name="Item"> Digital resource with all the data to write </param>
+            <param name="LeftColumnWidth"> Number of pixels of the left column, or the definition terms </param>
+            <param name="SearchLink"> Beginning of the search link that can be used to allow the web patron to select a term and run a search against this instance </param>
+            <param name="SearchLinkEnd"> End of the search link that can be used to allow the web patron to select a term and run a search against this instance  </param>
+            <param name="Tracer"> Trace object keeps a list of each method executed and important milestones in rendering </param>
+        </member>
         <member name="T:SobekCM.Library.Citation.SectionWriter.Coordinates_SectionWriter">
             <summary> Special citation section writer adds the coordinate information
             to the citation, from the main geographic section of the brief item object </summary>
@@ -7223,7 +7396,7 @@
             <param name="ElementInfo"> Additional possible data about this citation element </param>
             <param name="Item"> Digital resource to analyze for data to write </param>
         </member>
-        <member name="M:SobekCM.Library.Citation.SectionWriter.Coordinates_SectionWriter.Write_Citation_Section(SobekCM.Core.UI_Configuration.Citation.CitationElement,System.Text.StringBuilder,SobekCM.Core.BriefItem.BriefItemInfo,System.Int32,System.String,System.String,SobekCM.Tools.Custom_Tracer)">
+        <member name="M:SobekCM.Library.Citation.SectionWriter.Coordinates_SectionWriter.Write_Citation_Section(SobekCM.Core.UI_Configuration.Citation.CitationElement,System.Text.StringBuilder,SobekCM.Core.BriefItem.BriefItemInfo,System.Int32,System.String,System.String,SobekCM.Tools.Custom_Tracer,SobekCM.Core.Navigation.Navigation_Object)">
             <summary> Wites a section of citation from a provided digital resource </summary>
             <param name="ElementInfo"> Additional possible data about this citation element </param>
             <param name="Output"> Response stream for the item viewer to write directly to </param>
@@ -7244,7 +7417,7 @@
             <param name="ElementInfo"> Additional possible data about this citation element </param>
             <param name="Item"> Digital resource to analyze for data to write </param>
         </member>
-        <member name="M:SobekCM.Library.Citation.SectionWriter.Creator_SectionWriter.Write_Citation_Section(SobekCM.Core.UI_Configuration.Citation.CitationElement,System.Text.StringBuilder,SobekCM.Core.BriefItem.BriefItemInfo,System.Int32,System.String,System.String,SobekCM.Tools.Custom_Tracer)">
+        <member name="M:SobekCM.Library.Citation.SectionWriter.Creator_SectionWriter.Write_Citation_Section(SobekCM.Core.UI_Configuration.Citation.CitationElement,System.Text.StringBuilder,SobekCM.Core.BriefItem.BriefItemInfo,System.Int32,System.String,System.String,SobekCM.Tools.Custom_Tracer,SobekCM.Core.Navigation.Navigation_Object)">
             <summary> Wites a section of citation from a provided digital resource </summary>
             <param name="ElementInfo"> Additional possible data about this citation element </param>
             <param name="Output"> Response stream for the item viewer to write directly to </param>
@@ -7263,7 +7436,7 @@
             <param name="ElementInfo"> Additional possible data about this citation element </param>
             <param name="Item"> Digital resource to analyze for data to write </param>
         </member>
-        <member name="M:SobekCM.Library.Citation.SectionWriter.iCitationSectionWriter.Write_Citation_Section(SobekCM.Core.UI_Configuration.Citation.CitationElement,System.Text.StringBuilder,SobekCM.Core.BriefItem.BriefItemInfo,System.Int32,System.String,System.String,SobekCM.Tools.Custom_Tracer)">
+        <member name="M:SobekCM.Library.Citation.SectionWriter.iCitationSectionWriter.Write_Citation_Section(SobekCM.Core.UI_Configuration.Citation.CitationElement,System.Text.StringBuilder,SobekCM.Core.BriefItem.BriefItemInfo,System.Int32,System.String,System.String,SobekCM.Tools.Custom_Tracer,SobekCM.Core.Navigation.Navigation_Object)">
             <summary> Wites a section of citation from a provided digital resource </summary>
             <param name="ElementInfo"> Additional possible data about this citation element </param>
             <param name="Output"> Response stream for the item viewer to write directly to </param>
@@ -7272,6 +7445,7 @@
             <param name="SearchLink"> Beginning of the search link that can be used to allow the web patron to select a term and run a search against this instance </param>
             <param name="SearchLinkEnd"> End of the search link that can be used to allow the web patron to select a term and run a search against this instance  </param>
             <param name="Tracer"> Trace object keeps a list of each method executed and important milestones in rendering </param>
+            <param name="CurrentRequest"> Information about this request, such as URL, etc.</param>
         </member>
         <member name="T:SobekCM.Library.Citation.SectionWriter.Rights_SectionWriter">
             <summary> Special citation section writer adds the rights information, which can include
@@ -7280,11 +7454,12 @@
         </member>
         <member name="M:SobekCM.Library.Citation.SectionWriter.Rights_SectionWriter.Has_Data_To_Write(SobekCM.Core.UI_Configuration.Citation.CitationElement,SobekCM.Core.BriefItem.BriefItemInfo)">
             <summary> Returns flag that indicates this citation section writer 
-            will be writing alues to the output stream </summary>
+            will be writing values to the output stream </summary>
             <param name="ElementInfo"> Additional possible data about this citation element </param>
             <param name="Item"> Digital resource to analyze for data to write </param>
+            <returns>TRUE if there is a value to write</returns>
         </member>
-        <member name="M:SobekCM.Library.Citation.SectionWriter.Rights_SectionWriter.Write_Citation_Section(SobekCM.Core.UI_Configuration.Citation.CitationElement,System.Text.StringBuilder,SobekCM.Core.BriefItem.BriefItemInfo,System.Int32,System.String,System.String,SobekCM.Tools.Custom_Tracer)">
+        <member name="M:SobekCM.Library.Citation.SectionWriter.Rights_SectionWriter.Write_Citation_Section(SobekCM.Core.UI_Configuration.Citation.CitationElement,System.Text.StringBuilder,SobekCM.Core.BriefItem.BriefItemInfo,System.Int32,System.String,System.String,SobekCM.Tools.Custom_Tracer,SobekCM.Core.Navigation.Navigation_Object)">
             <summary> Wites a section of citation from a provided digital resource </summary>
             <param name="ElementInfo"> Additional possible data about this citation element </param>
             <param name="Output"> Response stream for the item viewer to write directly to </param>
@@ -7315,7 +7490,7 @@
             <param name="Item"> Digital resource to analyze for data to write </param>
             <param name="ElementInfo"> Additional possible data about this citation element </param>
         </member>
-        <member name="M:SobekCM.Library.Citation.SectionWriter.SpatialCoverage_SectionWriter.Write_Citation_Section(SobekCM.Core.UI_Configuration.Citation.CitationElement,System.Text.StringBuilder,SobekCM.Core.BriefItem.BriefItemInfo,System.Int32,System.String,System.String,SobekCM.Tools.Custom_Tracer)">
+        <member name="M:SobekCM.Library.Citation.SectionWriter.SpatialCoverage_SectionWriter.Write_Citation_Section(SobekCM.Core.UI_Configuration.Citation.CitationElement,System.Text.StringBuilder,SobekCM.Core.BriefItem.BriefItemInfo,System.Int32,System.String,System.String,SobekCM.Tools.Custom_Tracer,SobekCM.Core.Navigation.Navigation_Object)">
             <summary> Wites a section of citation from a provided digital resource </summary>
             <param name="ElementInfo"> Additional possible data about this citation element </param>
             <param name="Output"> Response stream for the item viewer to write directly to </param>
@@ -7335,7 +7510,7 @@
             <param name="ElementInfo"> Additional possible data about this citation element </param>
             <param name="Item"> Digital resource to analyze for data to write </param>
         </member>
-        <member name="M:SobekCM.Library.Citation.SectionWriter.UserTags_SectionWriter.Write_Citation_Section(SobekCM.Core.UI_Configuration.Citation.CitationElement,System.Text.StringBuilder,SobekCM.Core.BriefItem.BriefItemInfo,System.Int32,System.String,System.String,SobekCM.Tools.Custom_Tracer)">
+        <member name="M:SobekCM.Library.Citation.SectionWriter.UserTags_SectionWriter.Write_Citation_Section(SobekCM.Core.UI_Configuration.Citation.CitationElement,System.Text.StringBuilder,SobekCM.Core.BriefItem.BriefItemInfo,System.Int32,System.String,System.String,SobekCM.Tools.Custom_Tracer,SobekCM.Core.Navigation.Navigation_Object)">
             <summary> Wites a section of citation from a provided digital resource </summary>
             <param name="ElementInfo"> Additional possible data about this citation element </param>
             <param name="Output"> Response stream for the item viewer to write directly to </param>
@@ -12583,6 +12758,10 @@
             <summary> Write the item viewer main section as HTML directly to the HTTP output stream </summary>
             <param name="Output"> Response stream for the item viewer to write directly to </param>
             <param name="Tracer"> Trace object keeps a list of each method executed and important milestones in rendering </param>
+        </member>
+        <member name="P:SobekCM.Library.ItemViewer.Viewers.Text_Search_ItemViewer.ViewerBox_InlineStyle">
+            <summary> Any additional inline style for this viewer that affects the main box around this</summary>
+            <remarks> This returns the width of the image for the width of the viewer port </remarks>
         </member>
         <member name="M:SobekCM.Library.ItemViewer.Viewers.Text_Search_ItemViewer.Add_Main_Viewer_Section(System.Web.UI.WebControls.PlaceHolder,SobekCM.Tools.Custom_Tracer)">
             <summary> Allows controls to be added directory to a place holder, rather than just writing to the output HTML stream </summary>
@@ -20932,6 +21111,14 @@
             requests from the main HTML subwriter. </summary>
             <value> This tells the HTML and mySobek writers to mimic the currentItem viewer </value>
         </member>
+        <member name="T:SobekCM.Library.MySobekViewer.Import_Spreadsheet_MySobekViewer">
+            <summary> Class to import a spreadsheet of metadata into the system </summary>
+        </member>
+        <member name="P:SobekCM.Library.MySobekViewer.Import_Spreadsheet_MySobekViewer.Upload_File_Possible">
+            <summary> Returns a flag indicating whether the file upload specific holder in the itemNavForm form will be utilized 
+            for the current request, or if it can be hidden/omitted. </summary>
+            <value> Returns TRUE since files can be be uploaded through this viewer </value>
+        </member>
         <member name="T:SobekCM.Library.MySobekViewer.MySobekViewer_Factory">
             <summary> Factory class returns the appropriate mySobek viewer </summary>
         </member>
@@ -21775,6 +21962,13 @@
              <remarks> If the mySobek viewer contains pop-up forms the overall page renders differently, 
              allowing for the blanket division and the popup forms near the top of the rendered HTML </remarks>
             <value> This mySobek viewer always returns the value TRUE </value>
+        </member>
+        <member name="M:SobekCM.Library.MySobekViewer.Folder_Mgmt_MySobekViewer.Write_Within_HTML_Head(System.IO.TextWriter,SobekCM.Tools.Custom_Tracer)">
+            <summary> Write any additional values within the HTML Head of the final served page </summary>
+            <param name="Output"> Output stream currently within the HTML head tags </param>
+            <param name="Tracer"> Trace object keeps a list of each method executed and important milestones in rendering </param>
+            <returns> TRUE if this should completely override the default added by the admin or mySobek viewer </returns>
+            <remarks> By default this does nothing, but can be overwritten by all the individual html subwriters </remarks>
         </member>
         <member name="M:SobekCM.Library.MySobekViewer.Folder_Mgmt_MySobekViewer.Write_HTML(System.IO.TextWriter,SobekCM.Tools.Custom_Tracer)">
             <summary> Add the HTML to be displayed in the main SobekCM viewer area </summary>
