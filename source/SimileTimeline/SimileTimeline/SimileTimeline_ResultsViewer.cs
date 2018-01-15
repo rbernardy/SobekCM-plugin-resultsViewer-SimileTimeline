@@ -34,6 +34,7 @@ namespace SimileTimeline
         private string source_url;
         private static string path_log;
         private static bool Verify_Thumbnail_Files = false;
+        private static readonly string timeline_version = "20180115.1230";
 
         /// <summary> Constructor for a new instance of the SimilineTimeline_ResultsViewer class </summary>
         public SimileTimeline_ResultsViewer() : base()
@@ -62,8 +63,9 @@ namespace SimileTimeline
                 }
             }
 
-            String path_debug = @"D:\WebRoot\plugins\Timeline\debug.txt";
-
+            //String path_debug = @"D:\WebRoot\plugins\Timeline\debug.txt";
+            String path_debug = HttpContext.Current.Server.MapPath("~") + @"\plugins\Timeline\debug.txt";
+            
             if (File.Exists(path_debug))
             {
                 debug = true;
@@ -85,13 +87,15 @@ namespace SimileTimeline
         /// <returns> Sorted tree with the results in hierarchical structure with volumes and issues under the titles and sorted by serial hierarchy </returns>
         public override void Add_HTML(PlaceHolder MainPlaceHolder, Custom_Tracer Tracer)
         {
+            Tracer.Add_Trace("SimileTimeline_ResultsViewer", "timeline version = " + timeline_version);
+
             logme("Add_HTML is called...");
 
             //debug = true;
             //Tracer.Add_Trace("SimileTimeline_ResultsViewer.Add_HTML", "TEMPORARILY SETTING DEBUG TO TRUE AT THE TOP ( MARK )");
 
-            DataSet tempSet = null;
-            DataTable metadataTable;
+            //DataSet tempSet = null;
+            //DataTable metadataTable;
             simileDate sd;
 
             string dir_resource = null, mydate, mymonth, myday, myyear, path;
@@ -176,10 +180,12 @@ namespace SimileTimeline
 
             pagedresults_itemcount=PagedResults.Count;
 
+            Tracer.Add_Trace("SimileTimeline_ResultsViewer", "PagedResults.Count=[" + PagedResults.Count + "].");
+
             foreach (iSearch_Title_Result titleResult in PagedResults)
             {
                 titleresult_itemcount = titleResult.Item_Count;
-
+               
                 bool multiple_title = titleResult.Item_Count > 1;
                 if (debug) resultsBldr.AppendLine("<!-- titleResult.Item_Count=[" + titleResult.Item_Count + "].-->");
 
@@ -277,7 +283,6 @@ namespace SimileTimeline
                         title = firstItemResult.Title;
                     }
                 }
-
             */
 
                 // metadata Title
@@ -333,7 +338,8 @@ namespace SimileTimeline
                 //mydate=getMetadata(titleResult,ResultsStats,"Publication_Date").Trim().Replace("|","").Trim();
 
                 SortDateString = getMetadata(titleResult, ResultsStats, "Timeline Date").Trim();
-                if (debug) logme(packageid + ": SortDateString=[" + SortDateString + "].");
+                
+                if (debug) logme(msg);
 
                 //if (SortDateString == "-1")
                 //{
@@ -374,7 +380,7 @@ namespace SimileTimeline
                 //    convertedDate = DateTime.Parse("0001-01-01");
                 //}
 
-                if (SortDateString.Length > 0)
+                if (SortDateString.Length > 0 && !SortDateString.Contains("N/A"))
                 {
                     convertedDate = DateTime.Parse(SortDateString);
 
@@ -385,9 +391,15 @@ namespace SimileTimeline
                     daynum = convertedDate.Day;
 
                     yearsRepresented.Add(yearnum);
+
+                    msg = packageid + ": Good date: SortDateString=[" + SortDateString + "].";
+                    Tracer.Add_Trace("SimileTimeline_ResultsViewer", msg);
                 }
                 else
                 {
+                    msg = packageid + ": No date: SortDateString=[" + SortDateString + "].";
+                    Tracer.Add_Trace("SimileTimeline_ResultsViewer", msg);
+
                     yearnum = -1;
                     monthnum = -1;
                     daynum = -1;
@@ -470,8 +482,10 @@ namespace SimileTimeline
                     string metadata_value = titleResult.Metadata_Display_Values[j];
                     SobekCM.Core.Search.Metadata_Search_Field thisField = UI_ApplicationCache_Gateway.Settings.Metadata_Search_Field_By_Name(field);
                     string display_field = string.Empty;
+
                     if (thisField != null)
                         display_field = thisField.Display_Term;
+
                     if (display_field.Length == 0)
                         display_field = field.Replace("_", " ");
 
@@ -549,7 +563,6 @@ namespace SimileTimeline
                 }
                 else
                 {
-
                     if (debug) logme(packageid + " being added as an event.");
 
                     /*
@@ -728,7 +741,10 @@ namespace SimileTimeline
            // datajs = datajs.Substring(0, datajs.Length - 3);
             datajs.Append("]}");
 
-            if (debug) logme("webroot=[" + HttpContext.Current.Server.MapPath("~") + "].");
+            msg = "webroot=[" + HttpContext.Current.Server.MapPath("~") + "].";
+            if (debug) logme(msg);
+            Tracer.Add_Trace("SimileTimeline_ResultsViewer", msg);
+
             File.WriteAllText(HttpContext.Current.Server.MapPath("~") + @"\temp\" + tlsn + "-" + unixTimestamp + ".js", datajs.ToString());
 
             resultsBldr.AppendLine("<script src=\"" + @"/temp/" + tlsn + "-" + unixTimestamp + ".js" + "\" type=\"text/javascript\"></script>");
@@ -739,7 +755,9 @@ namespace SimileTimeline
             {
                 // number.ToString("#,##0");
                 resultsBldr.AppendLine("<br/><p id=\"warningzero\">Note: For the timeline, out of " + pagedresults_itemcount.ToString("#,##0") + " results in this page all were missing dates and were skipped. Proceed to the next page (if any).</p>");
-                if (debug) logme("All results in this page were missing dates and were skipped, returning.");
+                msg = "All results in this page were missing dates and were skipped, returning.";
+                Tracer.Add_Trace("SimileTimeline_ResultsViewer", msg);
+                if (debug) logme(msg);
 
                 mainLiteral = new Literal { Text = resultsBldr.ToString() };
                 MainPlaceHolder.Controls.Add(mainLiteral);
@@ -879,7 +897,7 @@ namespace SimileTimeline
             resultsBldr.AppendLine("theme1.timeline_stop = new Date(Date.UTC(" + (Math.Abs(mymax) + 10) + ", 0, 1));");
             resultsBldr.AppendLine("theme1.mouseWheel='scroll';");
             resultsBldr.AppendLine("theme1.event.bubble.width = 450;");
-        resultsBldr.AppendLine("console.log(\"theme1 object\");");
+            resultsBldr.AppendLine("console.log(\"theme1 object\");");
             resultsBldr.AppendLine("console.log(theme1);");
 
             resultsBldr.AppendLine("var d = Timeline.DateTime.parseGregorianDateTime(\"" + myavg + "\")");
