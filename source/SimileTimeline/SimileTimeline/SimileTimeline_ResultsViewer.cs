@@ -34,7 +34,7 @@ namespace SimileTimeline
         private string source_url;
         private static string path_log;
         private static bool Verify_Thumbnail_Files = false;
-        private static readonly string timeline_version = "20180115.1230";
+        private static readonly string timeline_version = "20180120.0802";
 
         /// <summary> Constructor for a new instance of the SimilineTimeline_ResultsViewer class </summary>
         public SimileTimeline_ResultsViewer() : base()
@@ -932,12 +932,24 @@ namespace SimileTimeline
             resultsBldr.AppendLine("layout: 'overview'  // original, overview, detailed");
             resultsBldr.AppendLine("}),");
 
+            // Month
+
+            resultsBldr.AppendLine("Timeline.createBandInfo({");
+            resultsBldr.AppendLine("width:\"10%\",");
+            resultsBldr.AppendLine("intervalUnit: Timeline.DateTime.MONTH,");
+            resultsBldr.AppendLine("intervalPixels: 100,");
+            resultsBldr.AppendLine("eventSource: eventSource1,");
+            resultsBldr.AppendLine("date: d,");
+            resultsBldr.AppendLine("theme: theme1,");
+            resultsBldr.AppendLine("layout: 'overview'  // original, overview, detailed");
+            resultsBldr.AppendLine("}),");
+
             // Day
 
             resultsBldr.AppendLine("Timeline.createBandInfo({");
-            resultsBldr.AppendLine("width: \"80% \", ");
+            resultsBldr.AppendLine("width: \"70% \", ");
             resultsBldr.AppendLine("intervalUnit: Timeline.DateTime.DAY, ");
-            resultsBldr.AppendLine("intervalPixels: 300,");
+            resultsBldr.AppendLine("intervalPixels: 150,");
             resultsBldr.AppendLine("eventSource: eventSource1,");
             resultsBldr.AppendLine("date: d,");
             resultsBldr.AppendLine("theme: theme1,");
@@ -993,10 +1005,13 @@ namespace SimileTimeline
 
             resultsBldr.AppendLine("];");
 
-            resultsBldr.AppendLine("bandInfos[1].syncWith = 0;");
+            resultsBldr.AppendLine("bandInfos[0].syncWith = 3;");
+            resultsBldr.AppendLine("bandInfos[0].highlight = true;");
+            resultsBldr.AppendLine("bandInfos[1].syncWith = 3;");
             resultsBldr.AppendLine("bandInfos[1].highlight = true;");
-            resultsBldr.AppendLine("bandInfos[2].syncWith = 0;");
+            resultsBldr.AppendLine("bandInfos[2].syncWith = 3;");
             resultsBldr.AppendLine("bandInfos[2].highlight = true;");
+            resultsBldr.AppendLine("bandInfos[3].highlight = true;");
 
             //resultsBldr.AppendLine("bandInfos[3].syncWith = 0;");
             //resultsBldr.AppendLine("bandInfos[3].highlight = true;");

@@ -99,3 +99,15 @@ div#controls table td
   height:2000px;
 */
 }
+
+div.timeline-event-bubble-time
+{
+  display:none;
+  visibility: hidden;
+}
+
+div.timeline-event-bubble-wiki
+{
+  display: none;
+  visibility: hidden;
+}
