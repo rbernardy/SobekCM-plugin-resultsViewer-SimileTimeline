@@ -9,7 +9,12 @@ html  {background-color: #003366;}
 #wrap1 {display: block;}
 #hd, #ft {margin: 2em; padding-top: 2em;}
 #ft {padding-bottom: 1em;}
-#bd div.yui-g {margin: none;}
+#bd div.yui-g 
+{
+	margin: none;
+}
+
+
 h1 {color: #834c24;}
 p {margin-top: .5em;}
 
@@ -110,4 +115,111 @@ div.timeline-event-bubble-wiki
 {
   display: none;
   visibility: hidden;
+}
+
+.timeline-date-label
+{
+	color:black !important;
+}
+
+input.controlinput
+{
+	color:white;
+	font-weight:bolder;
+}
+
+input#filtercontrol
+{
+	color:black;
+	font-weight:bolder;
+}
+
+div#tlb0lscroll
+{
+	font-size:2.0em;
+	float:left;
+	margin-top:8px;
+	margin-left:-8px;
+	color:red;
+}
+
+div#tlb0rscroll
+{
+	font-size:2.0em;
+	float:right;
+	margin-top:8px;
+	margin-left:-32px;
+	color:red;
+}
+
+div#tlb1lscroll
+{
+	font-size:2.0em;
+	float:left;
+	margin-top:40px;
+	margin-left:-16px;
+	color:blue;
+}
+
+div#tlb1rscroll
+{
+	font-size:2.0em;
+	float:right;
+	margin-top:40px;
+	margin-left:0px;
+	color:blue;
+}
+
+div#tlb2lscroll
+{
+	font-size:2.0em;
+	float:left;
+	margin-top:80px;
+	margin-left:-16px;
+	color:yellow;
+}
+
+div#tlb2rscroll
+{
+	font-size:2.0em;
+	float:right;
+	margin-top:80px;
+	margin-left:0px;
+	color:yellow;
+}
+
+#leftbandcontrols
+{
+	float:left;
+	margin-top:23px;
+	margin-left:-10px;
+	margin-right:5px;
+	/*
+	padding:10px;
+	background-color:pink;
+	border:1px solid black;
+	*/
+}
+
+#rightbandcontrols
+{
+	float:right;
+	margin-top:25px;
+	margin-left:5px;
+	/*
+	padding:10px;
+	background-color:yellow;
+	border:1px solid black;
+	*/
+}
+
+.bandcontrolbuttons
+{
+	background-color:white;
+	margin-bottom:10px !important;
+}
+
+#timeline-band-3 .timeline-date-label
+{
+	top:0px;
 }

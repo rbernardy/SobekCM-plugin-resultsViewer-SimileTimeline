@@ -32,7 +32,11 @@ function setupFilterHighlightControls(div, timeline, bandIndices, theme) {
 
     var att = document.createAttribute("class");       // Create a "class" attribute
     att.value = "controlinput";                           // Set the value of the class attribute
-    input.setAttributeNode(att);        
+    input.setAttributeNode(att);
+
+    att = document.createAttribute("id");
+    att.value = "filtercontrol";
+    input.setAttributeNode(att);     
 
     SimileAjax.DOM.registerEvent(input, "keypress", handler);
     td.appendChild(input);
@@ -42,6 +46,11 @@ function setupFilterHighlightControls(div, timeline, bandIndices, theme) {
     
     // RRB
     if (debug) console.log("RRB: setupFilterHighlightControls : theme.event.highlightColors.length=[" + theme.event.highlightColors.length + "].");
+
+    for (var i=0; i< theme.event.highlightColors.length; i++)
+    {
+        console.log("RRB: theme.event.highlightColors[" + i + "]=[" + theme.event.highlightColors[i] + "].");
+    }
 
     for (var i = 0; i < theme.event.highlightColors.length-1; i++) 
     {
@@ -53,8 +62,9 @@ function setupFilterHighlightControls(div, timeline, bandIndices, theme) {
 
         var att = document.createAttribute("class");       // Create a "class" attribute
         att.value = "controlinput";                           // Set the value of the class attribute
-        input.setAttributeNode(att);        
-        input.style.background = theme.event.highlightColors[i];
+        input.setAttributeNode(att);
+        // was i
+        input.style.background = theme.event.highlightColors[i+1];
 
         SimileAjax.DOM.registerEvent(input, "keypress", handler);
     
@@ -62,8 +72,9 @@ function setupFilterHighlightControls(div, timeline, bandIndices, theme) {
         
         var divColor = document.createElement("div");
         divColor.style.height = "0.5em";
-        divColor.style.background = theme.event.highlightColors[i];
+        divColor.style.background = theme.event.highlightColors[i+1];
         
+        console.log("setup: " + i + "=[" + theme.event.highlightColors[i] + "].");
         //td.appendChild(divColor);
     }
     
@@ -120,7 +131,9 @@ function performFiltering(timeline, bandIndices, table)
 	// RRB
 	if (debug) console.log("RRB - performFiltering...");
 	
-    timerID = null;
+    if (debug) console.log("RRB - bandIndices.length=[" + bandIndices.length + "].");
+
+    if (debug) console.log(bandIndices);
     
     var tr = table.rows[1];
     var myword=tr.cells[0].firstChild.value;

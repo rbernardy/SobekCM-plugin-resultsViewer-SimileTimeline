@@ -34,7 +34,7 @@ namespace SimileTimeline
         private string source_url;
         private static string path_log;
         private static bool Verify_Thumbnail_Files = false;
-        private static readonly string timeline_version = "20180120.0802";
+        private static readonly string timeline_version = "20180210.1108";
 
         /// <summary> Constructor for a new instance of the SimilineTimeline_ResultsViewer class </summary>
         public SimileTimeline_ResultsViewer() : base()
@@ -813,13 +813,13 @@ namespace SimileTimeline
 
             if (debug) logme("Adding controls.");
 
-            resultsBldr.AppendLine("<button id=\"buttonControls\" class=\"btn\" onclick=\"javascript:toggleControls();\">Show Controls</button>");
+            resultsBldr.AppendLine("<button id=\"buttonControls\" class=\"btn\" onclick=\"javascript:toggleControls();\">Hisw Controls</button>");
             resultsBldr.AppendLine("\t\t\t <div class=\"controls\" id=\"controls\">");
 
             // jump
             // 2018-01-12 - jump to be within controls div
 
-            resultsBldr.Append("<p>Jump: ");
+            resultsBldr.Append("<p>Go to ");
             
             // <a href=\"javascript:centerSimileAjax('1,1,1')\">No date</a> ");
             
@@ -834,7 +834,7 @@ namespace SimileTimeline
 
             foreach (int decade in decadesDistinct)
             {
-                resultsBldr.Append("<a href=\"javascript:centerSimileAjax('1 1, " + decade + "')\">" + decade + "</a> ");
+                resultsBldr.Append("<a href=\"javascript:centerSimileAjax('1 1, " + decade + "')\">" + decade + "</a>&nbsp;&nbsp;&nbsp;");
             }
             
             resultsBldr.AppendLine("</p>\r\n\r\n");
@@ -906,7 +906,8 @@ namespace SimileTimeline
 
             resultsBldr.AppendLine("console.log(\"createBandInfo...\");");
 
-            resultsBldr.AppendLine("var bandInfos = [");
+            // need it global, removing var
+            resultsBldr.AppendLine("bandInfos = [");
 
             // Decade 
 
@@ -1090,6 +1091,11 @@ namespace SimileTimeline
             //resultsBldr.AppendLine("e.preventDefault();");
             //resultsBldr.AppendLine("console.log(\"adding preventdefault for timeline-band-0 dommousescroll.\");");
             //resultsBldr.AppendLine("},false);");
+
+            //resultsBldr.AppendLine("$(\"div.timeline-band-input\").append(\"<p>rrb</p>\");");
+            //resultsBldr.AppendLine("$(\"div.yui-t7\").prepend(\"<p id='tllscroll'>&lt;</p><p id='tlrscroll'>&gt;</p>\");");
+
+            resultsBldr.AppendLine("adjustSliderControls();");
 
             resultsBldr.AppendLine("}); <!-- end of doc ready -->");
 
