@@ -34,7 +34,7 @@ namespace SimileTimeline
         private string source_url;
         private static string path_log;
         private static bool Verify_Thumbnail_Files = false;
-        private static readonly string timeline_version = "20180210.1108";
+        private static readonly string timeline_version = "20180216.0532";
 
         /// <summary> Constructor for a new instance of the SimilineTimeline_ResultsViewer class </summary>
         public SimileTimeline_ResultsViewer() : base()
@@ -813,7 +813,7 @@ namespace SimileTimeline
 
             if (debug) logme("Adding controls.");
 
-            resultsBldr.AppendLine("<button id=\"buttonControls\" class=\"btn\" onclick=\"javascript:toggleControls();\">Hisw Controls</button>");
+            resultsBldr.AppendLine("<button id=\"buttonControls\" class=\"btn\" onclick=\"javascript:toggleControls();\">Hide Controls</button>");
             resultsBldr.AppendLine("\t\t\t <div class=\"controls\" id=\"controls\">");
 
             // jump

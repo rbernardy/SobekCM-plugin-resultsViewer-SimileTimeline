@@ -154,13 +154,13 @@
             $("button#band3rightscroll").on("click",function()
             {
                 console.log("button#band3rightscroll was clicked...");
-                scrollBand(3,50);
+                scrollBand(3,150);
             });
 
             $("button#band3leftscroll").on("click",function()
             {
                 console.log("button#band3leftscroll was clicked...");
-                scrollBand(3,-50);
+                scrollBand(3,-150);
             });
 
             console.log("end of adjustSliderControls...");

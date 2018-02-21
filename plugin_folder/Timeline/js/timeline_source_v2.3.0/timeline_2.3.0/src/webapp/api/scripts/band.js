@@ -473,7 +473,10 @@ Timeline._Band.prototype._onMouseMove = function(innerFrame, evt, target) {
 
 Timeline._Band.prototype._onMouseUp = function(innerFrame, evt, target) {
     this._dragging = false;
-    this._keyboardInput.focus();
+    
+    // RRB
+    // Could this be the issue of the jump scroll
+    //this._keyboardInput.focus();
 };
 
 Timeline._Band.prototype._onMouseOut = function(innerFrame, evt, target) {

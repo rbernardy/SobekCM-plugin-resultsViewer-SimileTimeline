@@ -128,10 +128,14 @@ function cleanString(s)
 
 function performFiltering(timeline, bandIndices, table) 
 {
+	debug=false;
+
 	// RRB
 	if (debug) console.log("RRB - performFiltering...");
-	
     if (debug) console.log("RRB - bandIndices.length=[" + bandIndices.length + "].");
+
+    bandIndices[0]=3;
+    bandIndices[1]=3;
 
     if (debug) console.log(bandIndices);
     
