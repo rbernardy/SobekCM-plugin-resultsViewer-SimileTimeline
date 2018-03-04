@@ -1,7 +1,10 @@
 var debug=false;
 
-function centerSimileAjax(date) {
-    tl.getBand(0).setCenterVisibleDate(SimileAjax.DateTime.parseGregorianDateTime(date));
+function centerSimileAjax(date) 
+{
+	console.log("centerSimileAjax called[" + date + "].");
+	console.log("centerSimileAjax parsed date=[" + SimileAjax.DateTime.parseGregorianDateTime(date) + "].");
+    tl.getBand(3).setCenterVisibleDate(SimileAjax.DateTime.parseGregorianDateTime(date));
 }
 
 function setupFilterHighlightControls(div, timeline, bandIndices, theme) {

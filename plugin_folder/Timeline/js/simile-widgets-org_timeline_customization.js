@@ -85,9 +85,11 @@
         	}
         }
 
-        function adjustSliderControls()
+        function adjustSliderControls(initialDate)
         {
             console.log("adjustSliderControls...");
+
+            console.log("initialDate=[" + initialDate + "].");
             
             //$("div.yui-t7").prepend("<div id='tlb0lscroll'>&#x25c0;</div><div id='tlb0rscroll'>&#x25b6;</div><div id='tlb1lscroll'>&#x25c0;</div><div id='tlb1rscroll'>&#x25b6;</div><div id='tlb2lscroll'>&#x25c0;</div><div id='tlb2rscroll'>&#x25b6;</div>");
 
@@ -114,54 +116,65 @@
 
             $("button#band0rightscroll").on("click",function()
             {
+            	// was 50
                 console.log("band#band0rightscroll was clicked...");
-                scrollBand(0,50);
+                scrollBand(0,-50);
             });
 
             $("button#band0leftscroll").on("click",function()
             {
+            	// was -50
                 console.log("button#band0leftscroll was clicked...");
-                scrollBand(0,-50);
+                scrollBand(0,50);
             });
 
 
             $("button#band1rightscroll").on("click",function()
             {
+            	// was 50
                 console.log("button#band1rightscoll was clicked...");
-                scrollBand(1,50);
+                scrollBand(1,-50);
             });
 
             $("button#band1leftscroll").on("click",function()
             {
+            	// was -50
                 console.log("button#band1leftscroll was clicked...");
-                scrollBand(1,-50);
+                scrollBand(1,50);
             });
 
 
             $("button#band2rightscroll").on("click",function()
             {
+            	// was 50
                 console.log("button#band2rightscroll was clicked...");
-                scrollBand(2,50);
+                scrollBand(2,-100);
             });
 
             $("button#band2leftscroll").on("click",function()
             {
+            	// was =50
                 console.log("button#band2leftscroll was clicked...");
-                scrollBand(2,-50);
+                scrollBand(2,100);
             });
 
 
             $("button#band3rightscroll").on("click",function()
             {
+            	// was 150
                 console.log("button#band3rightscroll was clicked...");
-                scrollBand(3,150);
+                scrollBand(3,-150);
             });
 
             $("button#band3leftscroll").on("click",function()
             {
+            	// was -=150
                 console.log("button#band3leftscroll was clicked...");
-                scrollBand(3,-150);
+                scrollBand(3,150);
             });
+
+            centerSimileAjax(initialDate);
+            centerSimileAjax(initialDate);
 
             console.log("end of adjustSliderControls...");
         }

@@ -34,7 +34,7 @@ namespace SimileTimeline
         private string source_url;
         private static string path_log;
         private static bool Verify_Thumbnail_Files = false;
-        private static readonly string timeline_version = "20180216.0532";
+        private static readonly string timeline_version = "20180304.1055";
 
         /// <summary> Constructor for a new instance of the SimilineTimeline_ResultsViewer class </summary>
         public SimileTimeline_ResultsViewer() : base()
@@ -81,6 +81,13 @@ namespace SimileTimeline
             return 10 * ((value + 9) / 10);
         }
 
+        public static int RoundDown(int value, Custom_Tracer tracer)
+        {
+            int myvalue = value - value % 10;
+            tracer.Add_Trace("timeline", "RoundDown: " + value + " down to " + myvalue + ".");
+            return myvalue;
+        }
+
         /// <summary> Adds the controls for this result viewer to the place holder on the main form </summary>
         /// <param name="MainPlaceHolder"> Main place holder ( &quot;mainPlaceHolder&quot; ) in the itemNavForm form into which the the bulk of the result viewer's output is displayed</param>
         /// <param name="Tracer"> Trace object keeps a list of each method executed and important milestones in rendering </param>
@@ -107,6 +114,8 @@ namespace SimileTimeline
             List<int> decadesDistinct = new List<int>();
             int count_missing_date = 0, pagedresults_itemcount=0,titleresult_itemcount=0;
             int count_total = 0;
+
+            List<simileDate> dateList = new List<simileDate>();
 
             Literal mainLiteral = null;
 
@@ -392,12 +401,19 @@ namespace SimileTimeline
 
                     yearsRepresented.Add(yearnum);
 
-                    msg = packageid + ": Good date: SortDateString=[" + SortDateString + "].";
-                    Tracer.Add_Trace("SimileTimeline_ResultsViewer", msg);
+                    sd = new simileDate();
+                    sd.yearnum = yearnum;
+                    sd.monthnum = monthnum;
+                    sd.daynum = daynum;
+
+                    dateList.Add(sd);
+                    
+                    //msg = packageid + ": Good date: SortDateString=[" + SortDateString + "].";
+                    //Tracer.Add_Trace("SimileTimeline_ResultsViewer", msg);
                 }
                 else
                 {
-                    msg = packageid + ": No date: SortDateString=[" + SortDateString + "].";
+                    msg = packageid + ": Bad/no date: SortDateString=[" + SortDateString + "].";
                     Tracer.Add_Trace("SimileTimeline_ResultsViewer", msg);
 
                     yearnum = -1;
@@ -775,17 +791,18 @@ namespace SimileTimeline
             //resultsBldr.AppendLine("<ul>");
 
             int key, value;
-            
+
+            Tracer.Add_Trace("timeline", "count in yearsRepresented=" + g.Count());
+
             foreach (var grp in g)
             {
                 key = grp.Key;
                 value = grp.Count();
 
-                //resultsBldr.AppendLine("<li>key=" + key + ", rounded=" + RoundUp(key) + ", count=" + value + "</li>");
-                decades.Add(RoundUp(key));
-            }
+                Tracer.Add_Trace("timeline","key=" + key + ", rounded=" + RoundUp(key) + ", count=" + value);
 
-            //resultsBldr.AppendLine("</ul>");
+                decades.Add(RoundDown(key,Tracer));
+            }
 
             foreach (int myvalue in yearsRepresented)
             {
@@ -794,9 +811,9 @@ namespace SimileTimeline
 
             int myavg = sum / yearsRepresented.Count;
 
-            if (debug) logme("min of yearsRepresented=" + mymin);
-            if (debug) logme("max of yearsRepresented=" + mymax);
-            if (debug) logme("average of yearsRepresented=" + myavg);
+            Tracer.Add_Trace("timeline","min of yearsRepresented=" + mymin);
+            Tracer.Add_Trace("timeline","max of yearsRepresented=" + mymax);
+            Tracer.Add_Trace("timeline","average of yearsRepresented=" + myavg);
 
             //resultsBldr.AppendLine("<p>Range of dates = " + mymin + " - " + mymax + ", average=" + myavg + ".</p>");
 
@@ -826,15 +843,43 @@ namespace SimileTimeline
             try
             {
                 decadesDistinct = decades.Distinct<int>().ToList<int>();
+
+                foreach (int mydecade in decadesDistinct)
+                {
+                    Tracer.Add_Trace("timeline", "decadesDistinct=" + mydecade);
+                }
             }
             catch (Exception e)
             {
                 if (debug) logme("exception trying to get decadesDistinct [" + e.Message + "].");
             }
 
+            // sort dateList by year, month, date
+
+            var dateListSorted = from mydates in dateList
+                                 orderby mydates.yearnum, mydates.monthnum, mydates.daynum
+                                 select mydates;
+
+            foreach (simileDate mydate2 in dateList)
+            {
+                Tracer.Add_Trace("timeline","dateList: " + mydate2.yearnum + "-" + mydate2.monthnum + "-" + mydate2.daynum);
+            }
+
+            int theDecade;
+
             foreach (int decade in decadesDistinct)
             {
-                resultsBldr.Append("<a href=\"javascript:centerSimileAjax('1 1, " + decade + "')\">" + decade + "</a>&nbsp;&nbsp;&nbsp;");
+                if (decade > mymax)
+                {
+                    theDecade = mymax;
+                }
+                else
+                {
+                    theDecade = decade;
+                }
+                
+                simileDate firstDate = getEarliestDateByDecade(ref dateList, theDecade,Tracer);
+                resultsBldr.Append("<a href=\"javascript:centerSimileAjax('" + firstDate.monthnum + "," + firstDate.daynum + "," + firstDate.yearnum + "')\">" + theDecade + "</a>&nbsp;&nbsp;&nbsp;");
             }
             
             resultsBldr.AppendLine("</p>\r\n\r\n");
@@ -1078,7 +1123,11 @@ namespace SimileTimeline
             resultsBldr.AppendLine("\tconsole.log(\"timeline_data variable...\");");
             resultsBldr.AppendLine("\tconsole.log(timeline_data);");
             resultsBldr.AppendLine("\t$(\"span#tl_ver\").text('[' + Timeline.writeVersion('tl_ver') + ']');");
-            resultsBldr.AppendLine("centerSimileAjax('1,1," + mymin + "');");
+
+            simileDate initialDate = getEarliestDateByDecade(ref dateList, mymin, Tracer);
+            Tracer.Add_Trace("timeline", "initial date=" + initialDate.monthnum + "-" + initialDate.daynum + "-" + initialDate.yearnum);
+            //resultsBldr.AppendLine("javascript:centerSimileAjax('" + initialDate.monthnum + "," + initialDate.daynum + "," + mymin + "');");
+
             resultsBldr.AppendLine("$(\".sbkPrsw_ResultsPanel\").css('width','95%');");
             //resultsBldr.AppendLine("document.getElementById(\"timeline-band-0\").removeEventListener(\"DOMMouseScroll\",arguments.callee,false);");
             resultsBldr.AppendLine("console.log(\"displaying timrline-band-0 object.\");");
@@ -1095,7 +1144,7 @@ namespace SimileTimeline
             //resultsBldr.AppendLine("$(\"div.timeline-band-input\").append(\"<p>rrb</p>\");");
             //resultsBldr.AppendLine("$(\"div.yui-t7\").prepend(\"<p id='tllscroll'>&lt;</p><p id='tlrscroll'>&gt;</p>\");");
 
-            resultsBldr.AppendLine("adjustSliderControls();");
+            resultsBldr.AppendLine("adjustSliderControls('" + initialDate.monthnum + "," + initialDate.daynum + "," + initialDate.yearnum + "');");
 
             resultsBldr.AppendLine("}); <!-- end of doc ready -->");
 
@@ -1292,6 +1341,35 @@ namespace SimileTimeline
         public static string stripHTMLtags(String data)
         {
             return Regex.Replace(data, @"<[^>]+>|&nbsp;", "").Trim();
+        }
+
+        public static simileDate getEarliestDateByDecade(ref List<simileDate> dateList, int decade, Custom_Tracer tracer)
+        {
+            var resultSet = from mydate in dateList
+                             where mydate.yearnum >= decade
+                             orderby mydate.yearnum,mydate.monthnum,mydate.daynum
+                             select mydate;
+
+            tracer.Add_Trace("", "getEarliestDateFromDecade: count resultSet=" + resultSet.Count());
+
+            simileDate mydate2 = new simileDate();
+
+            if (resultSet.Count() > 0)
+            {
+                mydate2.yearnum = resultSet.First<simileDate>().yearnum;
+                mydate2.monthnum = resultSet.First<simileDate>().monthnum;
+                mydate2.daynum = resultSet.First<simileDate>().daynum;
+            }
+            else
+            {
+                mydate2.yearnum = 0;
+                mydate2.monthnum = 0;
+                mydate2.daynum = 0;
+            }
+
+            tracer.Add_Trace("timeline", "getEarliestDateByDecade: decade=" + decade + "=[" + mydate2.yearnum + "-" + mydate2.monthnum + "-" + mydate2.daynum + "].");
+
+            return mydate2;
         }
 
         public static simileDate getSimileDateFrom(String SortDateString)
