@@ -14,19 +14,11 @@ using System.Web;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using EngineAgnosticLayerDbAccess;
-using SobekCM.Engine_Library.Database;
 using System.Data;
 
 
 namespace SimileTimeline
 {
-    public class simileDate
-    {
-        public int yearnum;
-        public int monthnum;
-        public int daynum;
-    }
 
     public class SimileTimeline_ResultsViewer: abstract_ResultsViewer
     {
@@ -34,7 +26,7 @@ namespace SimileTimeline
         private string source_url;
         private static string path_log;
         private static bool Verify_Thumbnail_Files = false;
-        private static readonly string timeline_version = "20180304.1055";
+        private static readonly string timeline_version = "20180309.1055";
 
         /// <summary> Constructor for a new instance of the SimilineTimeline_ResultsViewer class </summary>
         public SimileTimeline_ResultsViewer() : base()
@@ -76,6 +68,10 @@ namespace SimileTimeline
             }
         }
 
+        /// <summary> Flag indicates if this result view is sortable </summary>
+        /// <value>This value can be override by child classes, but by default this TRUE </value>
+        public override bool Sortable { get { return false; } }
+
         public static int RoundUp(int value)
         {
             return 10 * ((value + 9) / 10);
@@ -103,7 +99,7 @@ namespace SimileTimeline
 
             //DataSet tempSet = null;
             //DataTable metadataTable;
-            simileDate sd;
+            SimileDate sd;
 
             string dir_resource = null, mydate, mymonth, myday, myyear, path;
             string msg = null, packageid = null, myAbstract = "", mySubjects="",bibid,vid;
@@ -115,7 +111,10 @@ namespace SimileTimeline
             int count_missing_date = 0, pagedresults_itemcount=0,titleresult_itemcount=0;
             int count_total = 0;
 
-            List<simileDate> dateList = new List<simileDate>();
+            Dictionary<int, DateTime> earliest_time_by_decade = new Dictionary<int, DateTime>();
+            Dictionary<int, int> decades_calculated = new Dictionary<int, int>();
+
+            List<SimileDate> dateList = new List<SimileDate>();
 
             Literal mainLiteral = null;
 
@@ -401,7 +400,28 @@ namespace SimileTimeline
 
                     yearsRepresented.Add(yearnum);
 
-                    sd = new simileDate();
+                    // Get the decade here
+                    int decade = RoundDown(yearnum, Tracer);
+
+                    // Does this decade already exist?
+                    if ( decades_calculated.ContainsKey(decade))
+                    {
+                        // Then need to see if this is earlier than the last first date
+                        if (earliest_time_by_decade[decade] > convertedDate)
+                            earliest_time_by_decade[decade] = convertedDate;
+
+                        // Also, increment the number of dates in this decade
+                        decades_calculated[decade] = decades_calculated[decade] + 1;
+                    }
+                    else
+                    {
+                        // New decade found
+                        decades_calculated[decade] = 1;
+                        earliest_time_by_decade[decade] = convertedDate;
+                    }
+
+                    // Create this simile date object
+                    sd = new SimileDate();
                     sd.yearnum = yearnum;
                     sd.monthnum = monthnum;
                     sd.daynum = daynum;
@@ -781,6 +801,8 @@ namespace SimileTimeline
                 return;
             }
 
+            Tracer.Add_Trace("timeline", "sorting yearsRepresented");
+
             yearsRepresented.Sort();
             int mymin = yearsRepresented[i];
             int mymax = yearsRepresented[yearsRepresented.Count - 1];
@@ -794,21 +816,22 @@ namespace SimileTimeline
 
             Tracer.Add_Trace("timeline", "count in yearsRepresented=" + g.Count());
 
-            foreach (var grp in g)
-            {
-                key = grp.Key;
-                value = grp.Count();
+            // Get the decades
+            //foreach (var grp in g)
+            //{
+            //    key = grp.Key;
+            //    value = grp.Count();
 
-                Tracer.Add_Trace("timeline","key=" + key + ", rounded=" + RoundUp(key) + ", count=" + value);
+            //    Tracer.Add_Trace("timeline","key=" + key + ", rounded=" + RoundUp(key) + ", count=" + value);
 
-                decades.Add(RoundDown(key,Tracer));
-            }
+            //    decades.Add(RoundDown(key,Tracer));
+            //}
 
+            // Get the middle point
             foreach (int myvalue in yearsRepresented)
             {
                 sum += myvalue;
             }
-
             int myavg = sum / yearsRepresented.Count;
 
             Tracer.Add_Trace("timeline","min of yearsRepresented=" + mymin);
@@ -842,7 +865,9 @@ namespace SimileTimeline
             
             try
             {
-                decadesDistinct = decades.Distinct<int>().ToList<int>();
+                // decadesDistinct = decades.Distinct<int>().ToList<int>();
+                decadesDistinct = decades_calculated.Keys.ToList();
+                decadesDistinct.Sort();
 
                 foreach (int mydecade in decadesDistinct)
                 {
@@ -860,12 +885,13 @@ namespace SimileTimeline
                                  orderby mydates.yearnum, mydates.monthnum, mydates.daynum
                                  select mydates;
 
-            foreach (simileDate mydate2 in dateList)
+            foreach (SimileDate mydate2 in dateList)
             {
                 Tracer.Add_Trace("timeline","dateList: " + mydate2.yearnum + "-" + mydate2.monthnum + "-" + mydate2.daynum);
             }
 
             int theDecade;
+
 
             foreach (int decade in decadesDistinct)
             {
@@ -877,8 +903,11 @@ namespace SimileTimeline
                 {
                     theDecade = decade;
                 }
-                
-                simileDate firstDate = getEarliestDateByDecade(ref dateList, theDecade,Tracer);
+
+                //SimileDate firstDate = getEarliestDateByDecade(ref dateList, theDecade,Tracer);
+
+                DateTime decades_earliest_date = earliest_time_by_decade[decade];
+                SimileDate firstDate = new SimileDate(decades_earliest_date);
                 resultsBldr.Append("<a href=\"javascript:centerSimileAjax('" + firstDate.monthnum + "," + firstDate.daynum + "," + firstDate.yearnum + "')\">" + theDecade + "</a>&nbsp;&nbsp;&nbsp;");
             }
             
@@ -1124,7 +1153,10 @@ namespace SimileTimeline
             resultsBldr.AppendLine("\tconsole.log(timeline_data);");
             resultsBldr.AppendLine("\t$(\"span#tl_ver\").text('[' + Timeline.writeVersion('tl_ver') + ']');");
 
-            simileDate initialDate = getEarliestDateByDecade(ref dateList, mymin, Tracer);
+            DateTime earliest_date = earliest_time_by_decade[decadesDistinct[0]];
+            SimileDate initialDate = new SimileDate(earliest_date);
+
+            //SimileDate initialDate = getEarliestDateByDecade(ref dateList, mymin, Tracer);
             Tracer.Add_Trace("timeline", "initial date=" + initialDate.monthnum + "-" + initialDate.daynum + "-" + initialDate.yearnum);
             //resultsBldr.AppendLine("javascript:centerSimileAjax('" + initialDate.monthnum + "," + initialDate.daynum + "," + mymin + "');");
 
@@ -1343,41 +1375,41 @@ namespace SimileTimeline
             return Regex.Replace(data, @"<[^>]+>|&nbsp;", "").Trim();
         }
 
-        public static simileDate getEarliestDateByDecade(ref List<simileDate> dateList, int decade, Custom_Tracer tracer)
-        {
-            var resultSet = from mydate in dateList
-                             where mydate.yearnum >= decade
-                             orderby mydate.yearnum,mydate.monthnum,mydate.daynum
-                             select mydate;
+        //public static SimileDate getEarliestDateByDecade(ref List<SimileDate> dateList, int decade, Custom_Tracer tracer)
+        //{
+        //    var resultSet = from mydate in dateList
+        //                     where mydate.yearnum >= decade
+        //                     orderby mydate.yearnum,mydate.monthnum,mydate.daynum
+        //                     select mydate;
 
-            tracer.Add_Trace("", "getEarliestDateFromDecade: count resultSet=" + resultSet.Count());
+        //    tracer.Add_Trace("", "getEarliestDateFromDecade: count resultSet=" + resultSet.Count());
 
-            simileDate mydate2 = new simileDate();
+        //    SimileDate mydate2 = new SimileDate();
 
-            if (resultSet.Count() > 0)
-            {
-                mydate2.yearnum = resultSet.First<simileDate>().yearnum;
-                mydate2.monthnum = resultSet.First<simileDate>().monthnum;
-                mydate2.daynum = resultSet.First<simileDate>().daynum;
-            }
-            else
-            {
-                mydate2.yearnum = 0;
-                mydate2.monthnum = 0;
-                mydate2.daynum = 0;
-            }
+        //    if (resultSet.Count() > 0)
+        //    {
+        //        mydate2.yearnum = resultSet.First<SimileDate>().yearnum;
+        //        mydate2.monthnum = resultSet.First<SimileDate>().monthnum;
+        //        mydate2.daynum = resultSet.First<SimileDate>().daynum;
+        //    }
+        //    else
+        //    {
+        //        mydate2.yearnum = 0;
+        //        mydate2.monthnum = 0;
+        //        mydate2.daynum = 0;
+        //    }
 
-            tracer.Add_Trace("timeline", "getEarliestDateByDecade: decade=" + decade + "=[" + mydate2.yearnum + "-" + mydate2.monthnum + "-" + mydate2.daynum + "].");
+        //    tracer.Add_Trace("timeline", "getEarliestDateByDecade: decade=" + decade + "=[" + mydate2.yearnum + "-" + mydate2.monthnum + "-" + mydate2.daynum + "].");
 
-            return mydate2;
-        }
+        //    return mydate2;
+        //}
 
-        public static simileDate getSimileDateFrom(String SortDateString)
+        internal static SimileDate getSimileDateFrom(String SortDateString)
         {
             DateTime dateFromZero,convertedDate;
             String mydate,myyear,mymonth,myday;
             int yearnum, monthnum, daynum;
-            simileDate sd = new simileDate();
+            SimileDate sd = new SimileDate();
 
             try
             {

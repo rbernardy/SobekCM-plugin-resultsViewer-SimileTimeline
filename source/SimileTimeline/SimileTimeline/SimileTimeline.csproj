@@ -32,7 +32,7 @@
   <ItemGroup>
     <Reference Include="EngineAgnosticLayerDbAccess, Version=4.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>..\..\..\..\..\..\WebRoot\bin\EngineAgnosticLayerDbAccess.dll</HintPath>
+      <HintPath>..\..\DLLs\SobekCM_v4.11.0\EngineAgnosticLayerDbAccess.dll</HintPath>
     </Reference>
     <Reference Include="SobekCM_Core, Version=4.10.0.0, Culture=neutral, processorArchitecture=MSIL">
       <SpecificVersion>False</SpecificVersion>
@@ -69,6 +69,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="SimileDate.cs" />
     <Compile Include="SimileTimeline_ResultsViewer.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
