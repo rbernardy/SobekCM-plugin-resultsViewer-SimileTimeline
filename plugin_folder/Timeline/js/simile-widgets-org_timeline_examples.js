@@ -7,8 +7,12 @@ function centerSimileAjax(date)
     tl.getBand(3).setCenterVisibleDate(SimileAjax.DateTime.parseGregorianDateTime(date));
 }
 
-function setupFilterHighlightControls(div, timeline, bandIndices, theme) {
+function setupFilterHighlightControls(div, timeline, bandIndices, theme) 
+{
     var table = document.createElement("table");
+    var att = document.createAttribute("id");       // Create a "class" attribute
+    att.value = "fhcontrols"; 
+    table.setAttributeNode(att);    
     
     // RRB
     table.width="100%";
@@ -33,7 +37,7 @@ function setupFilterHighlightControls(div, timeline, bandIndices, theme) {
     var input = document.createElement("input");
     input.type = "text";
 
-    var att = document.createAttribute("class");       // Create a "class" attribute
+    att = document.createAttribute("class");       // Create a "class" attribute
     att.value = "controlinput";                           // Set the value of the class attribute
     input.setAttributeNode(att);
 

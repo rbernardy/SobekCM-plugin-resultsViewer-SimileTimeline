@@ -78,12 +78,9 @@ C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTi
 C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTimeline\source\SimileTimeline\SimileTimeline\bin\Debug\SobekCM_Core.pdb
 C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTimeline\source\SimileTimeline\SimileTimeline\bin\Debug\SobekCM_Engine_Library.pdb
 C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTimeline\source\SimileTimeline\SimileTimeline\bin\Debug\SobekCM_Library.pdb
-C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTimeline\source\SimileTimeline\SimileTimeline\bin\Debug\SobekCM_Library.xml
 C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTimeline\source\SimileTimeline\SimileTimeline\bin\Debug\SobekCM_Resource_Database.pdb
 C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTimeline\source\SimileTimeline\SimileTimeline\bin\Debug\SobekCM_Resource_Object.pdb
-C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTimeline\source\SimileTimeline\SimileTimeline\bin\Debug\SobekCM_Resource_Object.xml
 C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTimeline\source\SimileTimeline\SimileTimeline\bin\Debug\SobekCM_Tools.pdb
-C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTimeline\source\SimileTimeline\SimileTimeline\bin\Debug\SobekCM_Tools.xml
 C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTimeline\source\SimileTimeline\SimileTimeline\obj\Debug\SimileTimeline.csprojResolveAssemblyReference.cache
 C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTimeline\source\SimileTimeline\SimileTimeline\obj\Debug\SimileTimeline.csproj.CoreCompileInputs.cache
 C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTimeline\source\SimileTimeline\SimileTimeline\obj\Debug\SimileTimeline.dll
@@ -106,3 +103,4 @@ C:\Users\mark.v.sullivan\Desktop\SobekCM-plugin-resultsViewer-SimileTimeline-mas
 C:\Users\mark.v.sullivan\Desktop\SobekCM-plugin-resultsViewer-SimileTimeline-master\source\SimileTimeline\SimileTimeline\obj\Debug\SimileTimeline.dll
 C:\Users\mark.v.sullivan\Desktop\SobekCM-plugin-resultsViewer-SimileTimeline-master\source\SimileTimeline\SimileTimeline\obj\Debug\SimileTimeline.pdb
 C:\Users\mark.v.sullivan\Desktop\SobekCM-plugin-resultsViewer-SimileTimeline-master\source\SimileTimeline\SimileTimeline\bin\Debug\EngineAgnosticLayerDbAccess.dll
+C:\Users\RBernardy\Documents\gitextensions\SobekCM-plugin-resultsViewer-SimileTimeline\source\SimileTimeline\SimileTimeline\bin\Debug\EngineAgnosticLayerDbAccess.dll

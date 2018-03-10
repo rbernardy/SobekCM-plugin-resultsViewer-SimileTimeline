@@ -71,17 +71,36 @@
             console.log("There is no event...");
         }
 
-        function toggleControls()
+        function toggleControls(e)
         {
+            e = e || window.event;
+
+            // To prevent original Similie ajax code from closing the controls when the return
+            // is pressed in the filter/highlight input
+
+            if (e.explicitOriginalTarget.className=="controlinput")
+            {
+                console.log("was controlinput.");
+                return;
+            }
+            else
+            {
+                console.log("was not controlinput.");
+            }
+
         	if ($("div#controls").is(":visible"))
         	{
+                console.log("toggleControls: hiding...");
         		$("div#controls").hide();
         		$("#buttonControls").html("Show Controls");
+                $("#buttonControls").css("margin-bottom","10px");
         	}
         	else
         	{
+                console.log("toggleControls: showing...");
         		$("div#controls").show();
         		$("#buttonControls").html("Hide Controls");
+                $("#buttonControls").css("margin-bottom","0px");
         	}
         }
 

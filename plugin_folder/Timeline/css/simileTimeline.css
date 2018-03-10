@@ -41,6 +41,11 @@ div#controls table td
 	border:none;
 }
 
+div#controls
+{
+	margin-bottom:-10px;
+}
+
 .btn {
   background: #3498db;
   background-image: -webkit-linear-gradient(top, #3498db, #2980b9);
@@ -191,7 +196,7 @@ div#tlb2rscroll
 #leftbandcontrols
 {
 	float:left;
-	margin-top:23px;
+	/* margin-top:23px; */
 	margin-left:-10px;
 	margin-right:5px;
 	/*
@@ -204,7 +209,7 @@ div#tlb2rscroll
 #rightbandcontrols
 {
 	float:right;
-	margin-top:25px;
+	/* margin-top:25px; */
 	margin-left:5px;
 	/*
 	padding:10px;
@@ -383,4 +388,26 @@ body{text-align:center;}  */
 #exclusiondiv > p > a
 {
 	text-decoration: underline;
+}
+
+.timeline-small-event-icon
+{
+	width:2px !important;
+	height:10px !important;
+	top:6px !important;
+}
+
+#gotolinks
+{
+	margin-top:-10px;
+}
+
+#fhcontrols
+{
+	margin-top:-10px;
+}
+
+div.timeline-event-icon, div.timeline-event-label
+{
+	padding-top:5px;
 }

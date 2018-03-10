@@ -31,5 +31,4 @@ namespace SimileTimeline
             daynum = OriginalDate.Day;
         }
     }
-
 }
