@@ -222,6 +222,12 @@ div#tlb2rscroll
 {
 	background-color:white;
 	margin-bottom:10px !important;
+	border-radius:10px;
+}
+
+div#rightbandcontrols > button
+{
+	width:30px;
 }
 
 #timeline-band-3 .timeline-date-label
@@ -229,10 +235,15 @@ div#tlb2rscroll
 	top:0px;
 }
 
+.timeline-band
+{
+	border:3px solid white;
+}
 
-
-
-
+.timeline-horizontal .timeline-date-label-em
+{
+	height:1.5em !important;
+}
 
 /*
 originally from Base-Min.css
@@ -409,5 +420,53 @@ body{text-align:center;}  */
 
 div.timeline-event-icon, div.timeline-event-label
 {
-	padding-top:5px;
+	padding-top:15px;
+}
+
+button#band0leftscroll
+{
+	background-color:#eeeeee;
+	width:75px;
+	text-align:right;
+}
+
+button#band0rightscroll
+{
+	background-color:#eeeeee;
+}
+
+button#band1leftscroll
+{
+	background-color:#dddddd;
+	width:75px;
+	text-align:right;
+}
+
+button#band1rightscroll
+{
+	background-color:#dddddd;
+}
+
+button#band2leftscroll
+{
+	background-color:#cccccc;
+	width:75px;
+	text-align:right;
+}
+
+button#band2rightscroll
+{
+	background-color:#cccccc;
+}
+
+button#band3leftscroll
+{
+	background-color:#aaaaaa;
+	width:75px;
+	text-align:right;
+}
+
+button#band3rightscroll
+{
+	background-color:#aaaaaa;
 }

@@ -114,10 +114,10 @@
 
             $("div#controls").append("<div id='leftbandcontrols'>");
             
-            $("div#leftbandcontrols").append("<button id='band0leftscroll' title='scroll decade band back in time' class='bandcontrolbuttons' type='button'>&#x25c0;</button>");
-            $("div#leftbandcontrols").append("<button id='band1leftscroll' title='scroll year band back in time' class='bandcontrolbuttons' type='button'>&#x25c0;</button>");
-            $("div#leftbandcontrols").append("<button id='band2leftscroll' title='scroll month band back in time' class='bandcontrolbuttons' type='button'>&#x25c0;</button>");
-            $("div#leftbandcontrols").append("<button id='band3leftscroll' title='scroll day band back in time' class='bandcontrolbuttons' type='button'>&#x25c0;</button>");
+            $("div#leftbandcontrols").append("<button id='band0leftscroll' title='scroll decade band back in time' class='bandcontrolbuttons' type='button'>Decades &#x25c0;</button>");
+            $("div#leftbandcontrols").append("<button id='band1leftscroll' title='scroll year band back in time' class='bandcontrolbuttons' type='button'>Years &#x25c0;</button>");
+            $("div#leftbandcontrols").append("<button id='band2leftscroll' title='scroll month band back in time' class='bandcontrolbuttons' type='button'>Months &#x25c0;</button>");
+            $("div#leftbandcontrols").append("<button id='band3leftscroll' title='scroll day band back in time' class='bandcontrolbuttons' type='button'>Days &#x25c0;</button>");
             
             $("</div>");
 
@@ -191,6 +191,35 @@
                 console.log("button#band3leftscroll was clicked...");
                 scrollBand(3,150);
             });
+
+            $("div#mydecade").css("display","block").css("position","relative").css("left","50px").css("top","-37px").css("z-index","999").css("font-weight","bolder");
+        
+            /*
+            for (i=1; i<=3; i++)
+            {
+                var elem = $("div#timeline-band-" + i);
+
+                console.log(i + ". original top=[" + $("div#timeline-band-" + i).css("top") + "].");
+                var newtop=Math.abs($("div#timeline-band-" + i).css("top").replace("px","")) + Math.abs(i*15);
+                console.log(i + ". newtop=[" + newtop + "].");
+
+                var height=$("div#timeline-band-" + i).css("height");
+                console.log("height=[" + height + "].");
+
+                var left=$("div#timeline-band-" + i).css("left");
+                console.log("left=[" + left + "].");
+
+                var width=$("div#timeline-band-" + i).css("width");
+                console.log("width=[" + width + "].");
+
+                $("div#timeline-band-" + i).removeProp("style");
+                $("div#timeline-band-" + i).removeAttr("style");
+                $("div#timeline-band-" + i).css("top",newtop + "px").css("height",height).css("left",left).css("width",width);
+
+                console.log(i + ". final top=[" + $("div#timeline-band-" + i).css("top") + "].");
+                console.log("");
+            }
+            */
 
             centerSimileAjax(initialDate);
             centerSimileAjax(initialDate);

@@ -26,7 +26,7 @@ namespace SimileTimeline
         private string source_url;
         private static string path_log;
         private static bool Verify_Thumbnail_Files = false;
-        private static readonly string timeline_version = "20180310.1514";
+        private static readonly string timeline_version = "20180314.2156";
 
         /// <summary> Constructor for a new instance of the SimilineTimeline_ResultsViewer class </summary>
         public SimileTimeline_ResultsViewer() : base()
@@ -971,6 +971,10 @@ namespace SimileTimeline
             resultsBldr.AppendLine("theme1.timeline_stop = new Date(Date.UTC(" + (Math.Abs(mymax) + 10) + ", 0, 1));");
             resultsBldr.AppendLine("theme1.mouseWheel='scroll';");
             resultsBldr.AppendLine("theme1.event.bubble.width = 450;");
+
+            //resultsBldr.AppendLine("theme1.event.track.gap = 10;");
+            //resultsBldr.AppendLine("theme1.event.overviewTrack.gap = 10;");
+
             resultsBldr.AppendLine("console.log(\"theme1 object\");");
             resultsBldr.AppendLine("console.log(theme1);");
 

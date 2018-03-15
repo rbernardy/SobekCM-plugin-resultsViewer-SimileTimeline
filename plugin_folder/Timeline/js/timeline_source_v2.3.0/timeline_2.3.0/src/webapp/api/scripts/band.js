@@ -289,16 +289,24 @@ Timeline._Band.prototype.softPaint = function() {
     this._softPaintEvents();
 };
 
-Timeline._Band.prototype.setBandShiftAndWidth = function(shift, width) {
+Timeline._Band.prototype.setBandShiftAndWidth = function(shift, width) 
+{
     var inputDiv = this._keyboardInput.parentNode;
     var middle = shift + Math.floor(width / 2);
-    if (this._timeline.isHorizontal()) {
+    // RRB
+
+    if (this._timeline.isHorizontal()) 
+    {
+        console.log("setBandShiftAndWidth - isHorizontal...");
         this._div.style.top = shift + "px";
         this._div.style.height = width + "px";
         
         inputDiv.style.top = middle + "px";
         inputDiv.style.left = "-1em";
-    } else {
+    } 
+    else 
+    {
+        console.log("setBandShiftAndWidth - is NOT horizonal...");
         this._div.style.left = shift + "px";
         this._div.style.width = width + "px";
         
