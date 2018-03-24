@@ -26,7 +26,7 @@ namespace SimileTimeline
         private string source_url;
         private static string path_log;
         private static bool Verify_Thumbnail_Files = false;
-        private static readonly string timeline_version = "20180314.2156";
+        private static readonly string timeline_version = "20180324.0834";
 
         /// <summary> Constructor for a new instance of the SimilineTimeline_ResultsViewer class </summary>
         public SimileTimeline_ResultsViewer() : base()
@@ -965,10 +965,11 @@ namespace SimileTimeline
             //}
             //else
             //{
-                resultsBldr.AppendLine("theme1.timeline_start = new Date(Date.UTC(" + (Math.Abs(mymin) - 10) + ",0,0));");
+                // 2018-03-23 mtg - requested -100, +100
+                resultsBldr.AppendLine("theme1.timeline_start = new Date(Date.UTC(" + (Math.Abs(mymin) - 100) + ",0,0));");
             //}
 
-            resultsBldr.AppendLine("theme1.timeline_stop = new Date(Date.UTC(" + (Math.Abs(mymax) + 10) + ", 0, 1));");
+            resultsBldr.AppendLine("theme1.timeline_stop = new Date(Date.UTC(" + (Math.Abs(mymax) + 100) + ", 0, 1));");
             resultsBldr.AppendLine("theme1.mouseWheel='scroll';");
             resultsBldr.AppendLine("theme1.event.bubble.width = 450;");
 
@@ -1226,6 +1227,8 @@ namespace SimileTimeline
 
         public static void addToDataJS(StringBuilder datajs,int yearnum,int monthnum,int daynum,string title,string myAbstract,string bibid,string vid,String path)
         {
+            String title_final = title.Replace("'", "&apos;");
+
             if (debug) logme("addToDataJS: " + bibid + "_" + vid);
 
             if (debug) logme("addToDataJS: datajs length before=" + datajs.Length);
@@ -1234,7 +1237,14 @@ namespace SimileTimeline
             datajs.Append("'start': '" + yearnum + "-" + monthnum.ToString("D2") + "-" + daynum.ToString("D2") + "',");
             datajs.Append("'durationEvent':false,");
             //datajs += "'end': '" + yearnum + "-" + monthnum.ToString("D2") + "-" + daynum.ToString("D2") + "',";
-            datajs.Append("'title': '" + title.Replace("'", "&apos;") + "',");
+
+            // 2018-03-23 mtg - title at 25 characters max
+            if (title_final.Length>20)
+            {
+                title_final = title_final.Substring(0, 20) + "...";
+            }
+
+            datajs.Append("'title': '" + title_final + "',");
             datajs.Append("'description': '" + myAbstract.Replace("'", "&apos;") + "',");
             datajs.Append("'image': '" + path + "',");
             //datajs += "'link': '/" + titleResult.BibID + "/" + itemResult.VID + "',";

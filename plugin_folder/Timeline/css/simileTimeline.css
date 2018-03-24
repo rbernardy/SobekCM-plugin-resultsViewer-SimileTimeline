@@ -221,13 +221,19 @@ div#tlb2rscroll
 .bandcontrolbuttons
 {
 	background-color:white;
-	margin-bottom:10px !important;
+	margin-bottom:12px !important;
 	border-radius:10px;
+
+	width:86px;
+	height:23px;
+
+	text-align:right;
 }
 
 div#rightbandcontrols > button
 {
-	width:30px;
+	width:25px;
+	text-align:center;
 }
 
 #timeline-band-3 .timeline-date-label
@@ -423,11 +429,14 @@ div.timeline-event-icon, div.timeline-event-label
 	padding-top:15px;
 }
 
+div.timeline-event-highlight
+{
+	margin-top:17px;
+}
+
 button#band0leftscroll
 {
 	background-color:#eeeeee;
-	width:75px;
-	text-align:right;
 }
 
 button#band0rightscroll
@@ -438,8 +447,6 @@ button#band0rightscroll
 button#band1leftscroll
 {
 	background-color:#dddddd;
-	width:75px;
-	text-align:right;
 }
 
 button#band1rightscroll
@@ -450,8 +457,6 @@ button#band1rightscroll
 button#band2leftscroll
 {
 	background-color:#cccccc;
-	width:75px;
-	text-align:right;
 }
 
 button#band2rightscroll
@@ -462,8 +467,7 @@ button#band2rightscroll
 button#band3leftscroll
 {
 	background-color:#aaaaaa;
-	width:75px;
-	text-align:right;
+	
 }
 
 button#band3rightscroll
