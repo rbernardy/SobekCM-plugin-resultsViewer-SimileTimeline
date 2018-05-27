@@ -64,6 +64,14 @@
             console.log("myheight=[" + myheight + "].");
             $("#bd").height(myheight);
             $("#bd").css("overflow","scroll").css("overflow-x","hidden");
+
+            // #sbkPrsw_ButtonsTable > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(4)
+
+            //$("#sbkPrsw_ButtonsTable > tbody:nth-child(1) > tr:nth-child(1) > td:nth-child(4)").append("<img id=\"tlloadinggif\" src=\"/plugins/timeline/images/SkinnySeveralAsianlion.gif\"/>");
+
+            
+
+            console.log("end of doc ready.");
         });
 
         function noEvent()
@@ -224,6 +232,8 @@
             centerSimileAjax(initialDate);
             centerSimileAjax(initialDate);
 
+            $("#tlloadingmsg").hide();
+
             console.log("end of adjustSliderControls...");
         }
 
@@ -232,4 +242,19 @@
         	console.log("scrollBand called, bandnum=[" + bandnum + "].");
         
 			tl.getBand(bandnum)._moveEther(move_amt);
+        }
+
+        function selectedgotolink(selected)
+        {
+        	console.log("gotolinksselect: [" + selected.value + "].");
+            
+            // javascript:centerSimileAjax('" + firstDate.monthnum + "," + firstDate.daynum + "," + firstDate.yearnum + "')\">" + theDecade + "</a>&nbsp;&nbsp;&nbsp;");
+
+            var parts=selected.value.split("-");
+            var year=parts[0];
+            var month=parts[2];
+            var day=parts[1];
+            console.log(year + "-" + month + "-" + day);
+
+            centerSimileAjax("'" + month + "," + day + "," + year + "'");
         }
