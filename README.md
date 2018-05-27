@@ -18,7 +18,7 @@ The build in the released plugin folder was created against the latest version o
 
 SOAS Digital Collections - University of London. SOAS funded the original project. SOAS Digital Collections staff provided a tremendous amount of direction, guidance, suggestions, testing, and feedback - Erich Kesse, Claudia Mendias, Simon Baron, and Catherine Buxton.
 
-Mark V. Sullivan (SobekCM's lead developer, CIO & Application Architect - Sobek Digital Hosting & Consulting, LLC) - Mark made significant code contrubtions to the timeline plugin project, along with changes to SobeKCM's code base in support of the results viewer.
+Mark V. Sullivan (SobekCM's lead developer, CIO & Application Architect - Sobek Digital Hosting & Consulting, LLC) - Mark provided valuable guidance and made significant code contribtions to the timeline plugin project, along with changes to SobeKCM's code base in support of the results viewer.
 
 Simile Widgets - Timeline: An open-source 'spin-off' from the original SIMILE project at MIT. http://www.simile-widgets.org/. This results viewer project was based on the timeline widget (v2.3.0).
 
